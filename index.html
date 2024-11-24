@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube URL解析</title>
+    <script>
+        function fetchAndPostInvidiousData() {
+            const youtubeUrl = document.getElementById('youtubeUrl').value;
+            // YouTubeのURLからvideo-idを抽出
+            const videoId = youtubeUrl.match(/(?:https?:\/\/(?:www\.)?youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|(?:v=))([^\/\n\s&?]+))/);
+            
+            if (videoId && videoId[1]) {
+                // バックエンドにリクエストを送信
+                fetch(`/get-video-data/${videoId[1]}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.error) {
+                            document.getElementById('error').innerText = data.error;
+                            document.getElementById('result').innerHTML = '';
+                        } else {
+                            document.getElementById('result').innerHTML = JSON.stringify(data, null, 2);
+                            document.getElementById('error').innerText = '';
+                        }
+                    })
+                    .catch(error => {
+                        document.getElementById('error').innerText = 'エラーが発生しました';
+                    });
+            } else {
+                document.getElementById('error').innerText = '無効なYouTubeのURLです';
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>YouTubeのURLを入力してデータを取得</h1>
+    <input type="text" id="youtubeUrl" placeholder="YouTubeのURLを入力">
+    <button onclick="fetchAndPostInvidiousData()">送信</button>
+
+    <div id="result"></div> <!-- レスポンスを表示するためのエリア -->
+    <div id="error"></div>  <!-- エラーメッセージを表示するためのエリア -->
+</body>
+</html>
