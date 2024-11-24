@@ -3,7 +3,7 @@ import requests
 
 app = Flask(__name__)
 
-@app.route('/')
+@app.route('/home')
 def index():
     return open('index.html').read()
 
