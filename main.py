@@ -1,5 +1,5 @@
 from flask import Flask, jsonify
-import requests
+import subprocess
 
 app = Flask(__name__)
 
@@ -10,16 +10,19 @@ def index():
 @app.route('/get-video-data/<video_id>', methods=['GET'])
 def get_video_data(video_id):
     # curlコマンドを実行するURL
-    import subprocess
+    curl_command = f"curl https://thingproxy.freeboard.io/fetch/https://inv.nadeko.net/api/v1/videos/{video_id}"
 
-# 実行するcurlコマンド
-curl_command = "curl https://thingproxy.freeboard.io/fetch/https://inv.nadeko.net/api/v1/videos/{video_id}"
+    # curlコマンドを実行し、出力を取得
+    result = subprocess.run(curl_command, shell=True, capture_output=True, text=True)
 
-# curlコマンドを実行し、出力を取得
-result = subprocess.run(curl_command, shell=True, capture_output=True, text=True)
-
-# 結果を表示
-print(result.stdout)
+    # 結果をJSONとして返す
+    if result.returncode == 0:
+        # 成功した場合は、結果をJSONで返す
+        return jsonify({"data": result.stdout})
+    else:
+        # エラーが発生した場合は、エラーメッセージを返す
+        return jsonify({"error": "Failed to fetch data"}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
+
