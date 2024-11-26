@@ -105,6 +105,9 @@ def watch_video():
         print("Stack trace:", traceback.format_exc())
         return "Internal Server Error", 500
 
+
+
+
 @app.route('/channel')
 def watch_video():
     try:
@@ -133,7 +136,7 @@ def watch_video():
             "adaptiveFormatsUrl": data.get("adaptiveFormats", [{}])[0].get("url", "No adaptiveFormats URL"),
             # 同様にformatStreamsがリストの場合
             "formatStreamsUrl": data.get("formatStreams", [{}])[0].get("url", "No formatStreams URL"),
-            # recommendedVideosがリストの場合、各要素から必要なデータを取り出す
+            # latestVideosがリストの場合、各要素から必要なデータを取り出す
             "latestVideos": [
                 {
                     "videoId": item.get("videoId", "No videoId"),
@@ -169,7 +172,7 @@ def watch_video():
             <p><strong>Format Streams URL:</strong> {{ formatStreamsUrl }}</p>
             <p><strong>Recommended Videos:</strong></p>
             <ul>
-            {% for video in recommendedVideos %}
+            {% for video in latestVideos %}
                 <li>
                     <strong>Video ID:</strong> <a href="https://my-vercel.app/watch?v={{ video.videoId }}">{{ video.videoId }}</a><br>
                     <strong>Title:</strong> {{ video.title }}<br>
@@ -177,7 +180,7 @@ def watch_video():
                     <strong>View Count:</strong> {{ video.viewCountText }} ({{ video.viewCount }} views)
                 </li>
             {% else %}
-                <li>No recommended videos available.</li>
+                <li>利用可能な動画はありません。</li>
             {% endfor %}
             </ul>
             <p><strong>Author URL:</strong> <a href="{{ authorUrl }}">{{ authorUrl }}</a></p>
