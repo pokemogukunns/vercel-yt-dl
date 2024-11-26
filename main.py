@@ -109,7 +109,7 @@ def watch_video():
 
 
 @app.route('/channel')
-def watch_video():
+def watch_channel():
     try:
         channelid = request.args.get('c')
         if not channelid:
