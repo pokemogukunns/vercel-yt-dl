@@ -33,8 +33,8 @@ def watch_video():
             "adaptiveFormatsUrl": data.get("adaptiveFormats", [{}])[0].get("url", "No adaptiveFormats URL"),
             # 同様にformatStreamsがリストの場合
             "formatStreamsUrl": data.get("formatStreams", [{}])[0].get("url", "No formatStreams URL"),
-            # recommendedVideosがリストの場合、各要素から必要なデータを取り出す
-            "recommendedVideos": [
+            # latestVideosがリストの場合、各要素から必要なデータを取り出す
+            "latestVideos": [
                 {
                     "videoId": item.get("videoId", "No videoId"),
                     "title": item.get("title", "No title"),
@@ -69,7 +69,7 @@ def watch_video():
             <p><strong>Format Streams URL:</strong> {{ formatStreamsUrl }}</p>
             <p><strong>Recommended Videos:</strong></p>
             <ul>
-            {% for video in recommendedVideos %}
+            {% for video in latestVideos %}
                 <li>
                     <strong>Video ID:</strong> <a href="https://my-vercel.app/watch?v={{ video.videoId }}">{{ video.videoId }}</a><br>
                     <strong>Title:</strong> {{ video.title }}<br>
