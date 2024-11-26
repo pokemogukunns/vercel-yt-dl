@@ -52,10 +52,11 @@ def watch_video():
             <title>{{ title }}</title>
         </head>
         <body>
-            <h1>{{ title }}</h1>
-            <p><strong>Video ID:</strong> {{ videoId }}</p>
-            <p><strong>Adaptive Formats URL:</strong> {{ adaptiveFormatsUrl }}</p>
-            <p><strong>Format Streams URL:</strong> {{ formatStreamsUrl }}</p>
+            <h1>{{ title }}</h1><br>
+            <p><strong>Video ID:</strong> {{ videoId }}</p><br>
+            <p><strong><a href="{{ adaptiveFormatsUrl }}">音声のみダウンロード</a></strong></p>
+            <a href="{{ formatStreamsUrl }}">音声のみダウンロード</a>
+            <p><video src="{{ formatStreamsUrl }}"></video></p>
             <p><strong>Recommended Videos:</strong> {{ recommendedVideos }}</p>
             <p><strong>Author URL:</strong> <a href="{{ authorUrl }}">{{ authorUrl }}</a></p>
             <p><strong>View Count:</strong> {{ viewCountText }} ({{ viewCount }} views)</p>
