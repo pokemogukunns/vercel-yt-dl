@@ -142,9 +142,9 @@ def watch_channel():
                     "videoId": item.get("videoId", "No videoId"),
                     "title": item.get("title", "No title"),
                     "author": item.get("author", "No author"),
-                    "authorUrl": item.get("authorUrl", "No author URL"),
-                    "viewCountText": item.get("viewCountText", "No view count text"),
-                    "viewCount": item.get("viewCount", "No view count")
+                    "viewCountText": item.get("viewCountText", "No author URL"),
+                    "description": item.get("description", "No view count text"),
+                    "publishedText": item.get("publishedText", "No view count")
                 }
                 for item in data.get("recommendedVideos", [])
             ],
@@ -177,6 +177,7 @@ def watch_channel():
                     <strong>Video ID:</strong> <a href="https://my-vercel.app/watch?v={{ video.videoId }}">{{ video.videoId }}</a><br>
                     <strong>Title:</strong> {{ video.title }}<br>
                     <strong>Author:</strong> <a href="{{ video.authorUrl }}">{{ video.author }}</a><br>
+                    <strong>視聴数:</strong>{{ viewCountText }}
                     <strong>View Count:</strong> {{ video.viewCountText }} ({{ video.viewCount }} views)
                 </li>
             {% else %}
