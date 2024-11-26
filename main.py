@@ -44,6 +44,7 @@ def watch_video():
                 }
                 for item in data.get("recommendedVideos", [])
             ],
+            "storyboardWidth": data.get("storyboardWidth", "No author URL"),
             "genreUrl": data.get("author", "No author URL"),
             "authorThumbnails": data.get("url", "No author URL"),
             "authorUrl": data.get("authorUrl", "No author URL"),
@@ -70,6 +71,7 @@ def watch_video():
             </video><br>
             <h1>{{ title }}</h1><br>
             <p><strong>Video ID:</strong> {{ videoId }}</p><br>
+            <p><strong>概要欄</strong>{{ storyboardWidth }}</p><br>
             <a href="{{ adaptiveFormatsUrl }}">音声をダウンロード</a><br>
             <a href="{{ formatStreamsUrl }}">動画をダウンロード</a><br>
             <p><strong><img src="{{ url }}"></strong> <a href="{{ authorUrl }}">{{ author }}</a></p><br>
