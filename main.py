@@ -47,7 +47,7 @@ def watch_video():
             "storyboardWidth": data.get("storyboardWidth", "No author URL"),
             "genreUrl": data.get("author", "No author URL"),
             "authorThumbnails": data.get("url", "No author URL"),
-            "authorUrl": data.get("authorUrl", "No author URL"),
+            "authorId": data.get("authorId", "No author URL"),
             "viewCountText": data.get("viewCountText", "No view count text"),
             "viewCount": data.get("viewCount", "No view count"),
             "quality": data.get("quality", "No quality"),
@@ -74,7 +74,7 @@ def watch_video():
             <p><strong>概要欄</strong>{{ storyboardWidth }}</p><br>
             <a href="{{ adaptiveFormatsUrl }}">音声をダウンロード</a><br>
             <a href="{{ formatStreamsUrl }}">動画をダウンロード</a><br>
-            <p><strong><img src="{{ url }}"></strong> <a href="{{ authorUrl }}">{{ author }}</a></p><br>
+            <p><strong><img src="{{ url }}"></strong> <a href="/channel?c={{ authorId }}">{{ author }}</a></p><br>
             <p><strong>視聴数:</strong> {{ viewCount }} 回視聴</p><br>
             <p><strong>画質:</strong> {{ quality }}</p><br>
             <p><strong>公開日：</strong> {{ publishedText }} ({{ published }})</p><br>
