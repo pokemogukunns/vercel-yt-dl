@@ -56,7 +56,9 @@ def watch_video():
             <p><strong>Video ID:</strong> {{ videoId }}</p><br>
             <p><strong><a href="{{ adaptiveFormatsUrl }}">音声のみダウンロード</a></strong></p>
             <a href="{{ formatStreamsUrl }}">音声のみダウンロード</a>
-            <p><video style="outline:none;width:100%;background-color:#000;" playsinline="" controls="" loadedmetadata="settime()" loop=""></video></p>
+            <video style="outline:none;width:100%;background-color:#000;" playsinline="" controls="" loadedmetadata="settime()" loop="">
+            <source src="{{ formatStreamsUrl }}">
+            </video>
             <p><strong>Recommended Videos:</strong> {{ recommendedVideos }}</p>
             <p><strong>Author URL:</strong> <a href="{{ authorUrl }}">{{ authorUrl }}</a></p>
             <p><strong>View Count:</strong> {{ viewCountText }} ({{ viewCount }} views)</p>
