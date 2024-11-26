@@ -64,13 +64,13 @@ def watch_video():
             <title>{{ title }}</title>
         </head>
         <body>
-            <h1>{{ title }}</h1><br>
-            <p><strong>Video ID:</strong> {{ videoId }}</p><br>
-            <p><strong><a href="{{ adaptiveFormatsUrl }}">音声をダウンロード</a></strong></p>
-            <a href="{{ formatStreamsUrl }}">動画をダウンロード</a>
             <video style="outline:none;width:100%;background-color:#000;" playsinline="" controls="" loadedmetadata="settime()" loop="">
             <source src="{{ formatStreamsUrl }}">
             </video><br>
+            <h1>{{ title }}</h1><br>
+            <p><strong>Video ID:</strong> {{ videoId }}</p><br>
+            <a href="{{ adaptiveFormatsUrl }}">音声をダウンロード</a>
+            <a href="{{ formatStreamsUrl }}">動画をダウンロード</a>
             <p><strong><img src="{{ url }}"></strong> <a href="{{ authorUrl }}">{{ authorUrl }}</a></p><br>
             <p><strong>視聴数:</strong> {{ viewCountText }} ({{ viewCount }} views)</p><br>
             <p><strong>画質:</strong> {{ quality }}</p><br>
