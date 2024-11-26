@@ -80,7 +80,7 @@ def watch_video():
             {% for video in recommendedVideos %}
                 <li>
                     <strong></strong> <a href="https://vercel-tau-lac-41.vercel.app/watch?v={{ video.videoId }}">
-                    <img src="https://img.youtube.com/vi/{{ video.videoId }}/0.jpg<br>
+                    <img src="https://img.youtube.com/vi/{{ video.videoId }}/0.jpg" /><br>
                     <strong></strong> {{ video.title }}<br></a>
                     <strong></strong> <a href="{{ video.authorUrl }}">{{ video.author }}</a><br>
                     <strong></strong> {{ video.viewCountText }} ({{ video.viewCount }} views)
