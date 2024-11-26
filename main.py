@@ -54,8 +54,8 @@ def watch_video():
         <body>
             <h1>{{ title }}</h1><br>
             <p><strong>Video ID:</strong> {{ videoId }}</p><br>
-            <p><strong><a href="{{ adaptiveFormatsUrl }}">音声のみダウンロード</a></strong></p>
-            <a href="{{ formatStreamsUrl }}">音声のみダウンロード</a>
+            <p><strong><a href="{{ adaptiveFormatsUrl }}">音声をダウンロード</a></strong></p>
+            <a href="{{ formatStreamsUrl }}">動画をダウンロード</a>
             <video style="outline:none;width:100%;background-color:#000;" playsinline="" controls="" loadedmetadata="settime()" loop="">
             <source src="{{ formatStreamsUrl }}">
             </video>
