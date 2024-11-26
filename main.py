@@ -65,7 +65,7 @@ def watch_video():
             <title>{{ title }}</title>
         </head>
         <body>
-            <video style="outline:none;width:100%;background-color:#000;" playsinline="" controls="" loadedmetadata="settime()" loop="">
+            <video style="outline:none;width:100%;background-color:#000;" playsinline="" poster="https://img.youtube.com/vi/{{ videoId }}/0.jpg" controls="" loadedmetadata="settime()" loop="">
             <source src="{{ formatStreamsUrl }}">
             </video><br>
             <h1>{{ title }}</h1><br>
