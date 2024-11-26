@@ -44,6 +44,7 @@ def watch_video():
                 }
                 for item in data.get("recommendedVideos", [])
             ],
+            "authorThumbnails": data.get("url", "No author URL"),
             "authorUrl": data.get("authorUrl", "No author URL"),
             "viewCountText": data.get("viewCountText", "No view count text"),
             "viewCount": data.get("viewCount", "No view count"),
@@ -52,7 +53,8 @@ def watch_video():
             "published": data.get("published", "No published date"),
         }
 
-        # video.htmlテンプレート
+        #
+        # video.htmlテンプレート(動的にHTMLを変更)
         html_template = """
         <!DOCTYPE html>
         <html lang="en">
@@ -69,11 +71,16 @@ def watch_video():
             <video style="outline:none;width:100%;background-color:#000;" playsinline="" controls="" loadedmetadata="settime()" loop="">
             <source src="{{ formatStreamsUrl }}">
             </video><br>
+            <p><strong><img src="{{ url }}"></strong> <a href="{{ authorUrl }}">{{ authorUrl }}</a></p><br>
+            <p><strong>視聴数:</strong> {{ viewCountText }} ({{ viewCount }} views)</p><br>
+            <p><strong>画質:</strong> {{ quality }}</p><br>
+            <p><strong>公開日：</strong> {{ publishedText }} ({{ published }})</p><br>
                <ul>
             {% for video in recommendedVideos %}
                 <li>
-                    <strong></strong> <a href="https://vercel-tau-lac-41.vercel.app/watch?v={{ video.videoId }}">{{ video.videoId }}</a><br>
-                    <strong></strong> {{ video.title }}<br>
+                    <strong></strong> <a href="https://vercel-tau-lac-41.vercel.app/watch?v={{ video.videoId }}">
+                    <img src="https://img.youtube.com/vi/{{ video.videoId }}/0.jpg<br>
+                    <strong></strong> {{ video.title }}<br></a>
                     <strong></strong> <a href="{{ video.authorUrl }}">{{ video.author }}</a><br>
                     <strong></strong> {{ video.viewCountText }} ({{ video.viewCount }} views)
                 </li>
@@ -81,10 +88,7 @@ def watch_video():
                 <li>利用可能な推奨ビデオはありません。</li>
             {% endfor %}
             </ul><br>
-            <p><strong>Author URL:</strong> <a href="{{ authorUrl }}">{{ authorUrl }}</a></p><br>
-            <p><strong>View Count:</strong> {{ viewCountText }} ({{ viewCount }} views)</p><br>
-            <p><strong>Quality:</strong> {{ quality }}</p><br>
-            <p><strong>Published Date:</strong> {{ publishedText }} ({{ published }})</p><br>
+            
         </body>
         </html>
         """
