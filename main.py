@@ -108,6 +108,18 @@ def watch_video():
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 @app.route('/channel')
 def watch_channel():
     try:
@@ -144,7 +156,7 @@ def watch_channel():
                     "author": item.get("author", "No author"),
                     "viewCountText": item.get("viewCountText", "No author URL"),
                     "description": item.get("description", "No view count text"),
-                    "publishedText": item.get("publishedText", "No view count")
+                    "publishedText": item.get("publishedText", "No view count"),
                 }
                 for item in data.get("recommendedVideos", [])
             ],
@@ -168,26 +180,20 @@ def watch_channel():
         <body>
             <h1>{{ author }}</h1>
             <p><strong>概要欄:</strong> {{ description }}</p>
-            <p><strong>Adaptive Formats URL:</strong> {{ adaptiveFormatsUrl }}</p>
-            <p><strong>Format Streams URL:</strong> {{ formatStreamsUrl }}</p>
-            <p><strong>Recommended Videos:</strong></p>
+            <p><strong>動画:</strong></p>
             <ul>
             {% for video in latestVideos %}
                 <li>
-                    <strong>Video ID:</strong> <a href="https://my-vercel.app/watch?v={{ video.videoId }}">{{ video.videoId }}</a><br>
-                    <strong>Title:</strong> {{ video.title }}<br>
+                    <strong>Video ID:</strong> <a href="/watch?v={{ videoId }}">{{ videoId }}</a><br>
+                    <strong>Title:</strong> {{ title }}<br>
                     <strong>Author:</strong> <a href="{{ video.authorUrl }}">{{ video.author }}</a><br>
                     <strong>視聴数:</strong>{{ viewCountText }}
-                    <strong>View Count:</strong> {{ video.viewCountText }} ({{ video.viewCount }} views)
+                    <strong>公開日:</strong> {{ publishedText }} ({{ published }} )
                 </li>
             {% else %}
                 <li>利用可能な動画はありません。</li>
             {% endfor %}
             </ul>
-            <p><strong>Author URL:</strong> <a href="{{ authorUrl }}">{{ authorUrl }}</a></p>
-            <p><strong>View Count:</strong> {{ viewCountText }} ({{ viewCount }} views)</p>
-            <p><strong>Quality:</strong> {{ quality }}</p>
-            <p><strong>Published Date:</strong> {{ publishedText }} ({{ published }})</p>
         </body>
         </html>
         """
