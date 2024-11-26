@@ -33,7 +33,17 @@ def watch_video():
             "adaptiveFormatsUrl": data.get("adaptiveFormats", [{}])[0].get("url", "No adaptiveFormats URL"),
             # 同様にformatStreamsがリストの場合
             "formatStreamsUrl": data.get("formatStreams", [{}])[0].get("url", "No formatStreams URL"),
-            "recommendedVideos": data.get("recommendedVideos", "No recommended videos"),
+            "recommendedVideos": [
+                {
+                    "videoId": item.get("videoId", "No videoId"),
+                    "title": item.get("title", "No title"),
+                    "author": item.get("author", "No author"),
+                    "authorUrl": item.get("authorUrl", "No author URL"),
+                    "viewCountText": item.get("viewCountText", "No view count text"),
+                    "viewCount": item.get("viewCount", "No view count")
+                }
+                for item in data.get("recommendedVideos", [])
+            ],
             "authorUrl": data.get("authorUrl", "No author URL"),
             "viewCountText": data.get("viewCountText", "No view count text"),
             "viewCount": data.get("viewCount", "No view count"),
@@ -59,7 +69,18 @@ def watch_video():
             <video style="outline:none;width:100%;background-color:#000;" playsinline="" controls="" loadedmetadata="settime()" loop="">
             <source src="{{ formatStreamsUrl }}">
             </video><br>
-            <p><strong>Recommended Videos:</strong> {{ recommendedVideos }}</p><br>
+               <ul>
+            {% for video in recommendedVideos %}
+                <li>
+                    <strong></strong> <a href="https://vercel-tau-lac-41.vercel.app/watch?v={{ video.videoId }}">{{ video.videoId }}</a><br>
+                    <strong></strong> {{ video.title }}<br>
+                    <strong></strong> <a href="{{ video.authorUrl }}">{{ video.author }}</a><br>
+                    <strong></strong> {{ video.viewCountText }} ({{ video.viewCount }} views)
+                </li>
+            {% else %}
+                <li>利用可能な推奨ビデオはありません。</li>
+            {% endfor %}
+            </ul><br>
             <p><strong>Author URL:</strong> <a href="{{ authorUrl }}">{{ authorUrl }}</a></p><br>
             <p><strong>View Count:</strong> {{ viewCountText }} ({{ viewCount }} views)</p><br>
             <p><strong>Quality:</strong> {{ quality }}</p><br>
