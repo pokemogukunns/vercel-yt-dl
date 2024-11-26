@@ -58,12 +58,12 @@ def watch_video():
             <a href="{{ formatStreamsUrl }}">動画をダウンロード</a>
             <video style="outline:none;width:100%;background-color:#000;" playsinline="" controls="" loadedmetadata="settime()" loop="">
             <source src="{{ formatStreamsUrl }}">
-            </video>
-            <p><strong>Recommended Videos:</strong> {{ recommendedVideos }}</p>
-            <p><strong>Author URL:</strong> <a href="{{ authorUrl }}">{{ authorUrl }}</a></p>
-            <p><strong>View Count:</strong> {{ viewCountText }} ({{ viewCount }} views)</p>
-            <p><strong>Quality:</strong> {{ quality }}</p>
-            <p><strong>Published Date:</strong> {{ publishedText }} ({{ published }})</p>
+            </video><br>
+            <p><strong>Recommended Videos:</strong> {{ recommendedVideos }}</p><br>
+            <p><strong>Author URL:</strong> <a href="{{ authorUrl }}">{{ authorUrl }}</a></p><br>
+            <p><strong>View Count:</strong> {{ viewCountText }} ({{ viewCount }} views)</p><br>
+            <p><strong>Quality:</strong> {{ quality }}</p><br>
+            <p><strong>Published Date:</strong> {{ publishedText }} ({{ published }})</p><br>
         </body>
         </html>
         """
