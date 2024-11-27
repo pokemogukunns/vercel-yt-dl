@@ -26,5 +26,9 @@
       "src": "/",
       "dest": "home.py"
     },
+    {
+      "src": "/home",
+      "dest": "home1.py"
+    },
   ]
 }
