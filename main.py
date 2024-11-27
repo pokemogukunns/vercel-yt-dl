@@ -84,7 +84,7 @@ def watch_video():
                     <strong></strong> <a href="./watch?v={{ video.videoId }}">
                     <img src="https://img.youtube.com/vi/{{ video.videoId }}/0.jpg" /><br>
                     <strong></strong> {{ video.title }}<br></a>
-                    <strong></strong> <a href=".{{ video.authorUrl }}">{{ video.author }}</a><br>
+                    <strong></strong> <a href="./channel?c={{ video.authorId }}">{{ video.author }}</a><br>
                     <strong></strong> {{ video.viewCountText }} ({{ video.viewCount }} views)
                 </li>
             {% else %}
