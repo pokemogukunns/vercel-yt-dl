@@ -12,11 +12,15 @@
   "routes": [
     {
       "src": "/watch",
-      "dest": "video.py",
+      "dest": "video.py"
+    },
+    {
       "src": "/channel",
-      "dest": "channel.py",
+      "dest": "channel.py"
+    },
+    {
       "src": "/search",
-      "dest": "search.py",
+      "dest": "search.py"
     }
   ]
 }
