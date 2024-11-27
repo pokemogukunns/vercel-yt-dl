@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading...</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        .loading-message {
+            font-size: 1.5em;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Loading...</h1>
+    <div class="loading-message">Fetching information...</div>
+    <div id="content-container"></div>
+
+    <script>
+        // URLのクエリパラメータを取得
+        const urlParams = new URLSearchParams(window.location.search);
+        const videoId = urlParams.get('v');
+        const channelId = urlParams.get('channelId');
+        const searchQuery = urlParams.get('q');
+
+        // 適切なエンドポイントを選択
+        let apiUrl = '';
+        if (videoId) {
+            apiUrl = `/watch?v=${videoId}`;
+            document.querySelector('.loading-message').textContent = 'Fetching video information...';
+        } else if (channelId) {
+            apiUrl = `/channel?channelId=${channelId}`;
+            document.querySelector('.loading-message').textContent = 'Fetching channel information...';
+        } else if (searchQuery) {
+            apiUrl = `/search?q=${encodeURIComponent(searchQuery)}`;
+            document.querySelector('.loading-message').textContent = 'Performing search...';
+        } else {
+            document.querySelector('.loading-message').textContent = 'No valid parameters provided.';
+            return;
+        }
+
+        // APIからデータを非同期に取得して動的にHTMLを更新
+        fetch(apiUrl)
+            .then(response => response.text())
+            .then(data => {
+                document.body.innerHTML = data; // 取得したデータでページを更新
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+                document.querySelector('.loading-message').textContent = 'Failed to fetch data.';
+            });
+    </script>
+</body>
+</html>
