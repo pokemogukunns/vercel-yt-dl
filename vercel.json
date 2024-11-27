@@ -21,7 +21,7 @@
     {
       "src": "/search",
       "dest": "search.py"
-    }
+    },
     {
       "src": "/",
       "dest": "home.py"
@@ -29,6 +29,6 @@
     {
       "src": "/home",
       "dest": "home1.py"
-    },
+    }
   ]
 }
