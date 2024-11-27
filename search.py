@@ -1,7 +1,7 @@
+from flask import Flask, render_template_string, request
 import subprocess
 import json
 import traceback
-from flask import Flask, render_template_string, request
 
 app = Flask(__name__)
 
@@ -25,20 +25,23 @@ def search_videos():
         # レスポンスがJSON形式だと仮定して、データを取得
         data = json.loads(response.stdout)
 
-        # 必要なデータを取り出す
-        search_results = [
-            {
-                "title": item.get("title", "No title"),
-                "videoId": item.get("videoId", "No videoId"),
-                "author": item.get("author", "No author"),
-                "authorId": item.get("authorId", "No authorId"),
-                "videoThumbnail": item.get("videoThumbnails", [{}])[0].get("url", "No thumbnail URL"),
-                "viewCountText": item.get("viewCountText", "No view count text"),
-                "publishedText": item.get("publishedText", "No published text"),
-                "lengthSeconds": item.get("lengthSeconds", "No length")
-            }
-            for item in data.get("items", [])
-        ]
+        # データ形式がリストの場合に対応
+        if isinstance(data, list):
+            search_results = [
+                {
+                    "title": item.get("title", "No title"),
+                    "videoId": item.get("videoId", "No videoId"),
+                    "author": item.get("author", "No author"),
+                    "authorId": item.get("authorId", "No authorId"),
+                    "videoThumbnail": item.get("videoThumbnails", [{}])[0].get("url", "No thumbnail URL"),
+                    "viewCountText": item.get("viewCountText", "No view count text"),
+                    "publishedText": item.get("publishedText", "No published text"),
+                    "lengthSeconds": item.get("lengthSeconds", "No length")
+                }
+                for item in data
+            ]
+        else:
+            search_results = []
 
         # 動的なHTMLテンプレート
         html_template = """
@@ -71,9 +74,8 @@ def search_videos():
 
         # テンプレートをレンダリングして返す
         return render_template_string(html_template, query=query, search_results=search_results)
-    
+
     except Exception as e:
-        # 詳細なエラーメッセージとスタックトレースをログに出力
         print(f"An error occurred: {e}")
         print("Stack trace:", traceback.format_exc())
         return "Internal Server Error", 500
