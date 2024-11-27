@@ -81,10 +81,10 @@ def watch_video():
                <ul>
             {% for video in recommendedVideos %}
                 <li>
-                    <strong></strong> <a href="https://vercel-tau-lac-41.vercel.app/watch?v={{ video.videoId }}">
+                    <strong></strong> <a href="./watch?v={{ video.videoId }}">
                     <img src="https://img.youtube.com/vi/{{ video.videoId }}/0.jpg" /><br>
                     <strong></strong> {{ video.title }}<br></a>
-                    <strong></strong> <a href="{{ video.authorUrl }}">{{ video.author }}</a><br>
+                    <strong></strong> <a href=".{{ video.authorUrl }}">{{ video.author }}</a><br>
                     <strong></strong> {{ video.viewCountText }} ({{ video.viewCount }} views)
                 </li>
             {% else %}
@@ -173,7 +173,7 @@ def channel_page():
             <ul>
             {% for video in latestVideos %}
                 <li>
-                    <a href="/watch?v={{ video.videoId }}">
+                    <a href="./watch?v={{ video.videoId }}">
                         <h3>{{ video.title }}</h3>
                         <p>{{ video.description }}</p>
                         <p><strong>視聴数:</strong> {{ video.viewCountText }}</p>
@@ -251,11 +251,11 @@ def search_videos():
             <ul>
             {% for result in search_results %}
                 <li>
-                    <a href="/watch?v={{ result.videoId }}">
+                    <a href="./watch?v={{ result.videoId }}">
                         <img src="{{ result.videoThumbnail }}" alt="{{ result.title }}">
                         <h3>{{ result.title }}</h3>
                     </a>
-                    <p><strong>Author:</strong> <a href="/channel?c={{ result.authorId }}">{{ result.author }}</a></p>
+                    <p><strong>Author:</strong> <a href="./channel?c={{ result.authorId }}">{{ result.author }}</a></p>
                     <p><strong>View Count:</strong> {{ result.viewCountText }}</p>
                     <p><strong>Published:</strong> {{ result.publishedText }}</p>
                     <p><strong>Length:</strong> {{ result.lengthSeconds }} seconds</p>
