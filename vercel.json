@@ -11,24 +11,8 @@
   ],
   "routes": [
     {
-      "src": "/watch",
-      "dest": "video.py"
-    },
-    {
-      "src": "/channel",
-      "dest": "channel.py"
-    },
-    {
-      "src": "/search",
-      "dest": "search.py"
-    },
-    {
-      "src": "/",
-      "dest": "home.py"
-    },
-    {
-      "src": "/home",
-      "dest": "home1.py"
+      "src": "/(.*)",
+      "dest": "main.py"
     }
   ]
 }
