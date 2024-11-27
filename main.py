@@ -275,5 +275,11 @@ def search_videos():
         return "Internal Server Error", 500
 
 
+@app.route('/home')
+def home():
+    return render_template('home.html')
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)
