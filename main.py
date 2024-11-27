@@ -74,7 +74,7 @@ def watch_video():
             <p><strong>概要欄</strong>{{ storyboardWidth }}</p><br>
             <a href="{{ adaptiveFormatsUrl }}">音声をダウンロード</a><br>
             <a href="{{ formatStreamsUrl }}">動画をダウンロード</a><br>
-            <p><strong><img src="{{ url }}"></strong> <a href="/channel?c={{ authorId }}">{{ author }}</a></p><br>
+            <img src="{{ url }}"> <a href="/channel?c={{ authorId }}">{{ author }}</a><br>
             <p><strong>視聴数:</strong> {{ viewCount }} 回視聴</p><br>
             <p><strong>画質:</strong> {{ quality }}</p><br>
             <p><strong>公開日：</strong> {{ publishedText }} ({{ published }})</p><br>
@@ -161,7 +161,7 @@ def channel_page():
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>{{ author }} - チャンネル情報</title>
+            <title>{{ author }}</title>
         </head>
         <body>
             <h1>{{ author }}</h1>
