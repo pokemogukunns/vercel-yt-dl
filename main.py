@@ -118,80 +118,59 @@ def watch_video():
 
 
 @app.route('/home')
-def channel_page():
-    
-        # curlコマンドを実行してチャンネルデータを取得
+def trending_videos():
+    try:
+        # `curl`コマンドを使ってAPIデータを取得
         curl_command = [
-            "curl", "-s", f"https://thingproxy.freeboard.io/fetch/https://inv.nadeko.net/api/v1/trending?region=JP"
+            "curl", "-s", "https://thingproxy.freeboard.io/fetch/https://inv.nadeko.net/api/v1/trending?region=JP"
         ]
         response = subprocess.run(curl_command, capture_output=True, text=True)
 
         if response.returncode != 0:
             print(f"Error executing curl: {response.stderr}")
-            return "Failed to fetch data", 500
+            return "Failed to fetch trending videos", 500
 
-        # JSONレスポンスを解析
-        try:
-            data = json.loads(response.stdout)
-        except json.JSONDecodeError:
-            print(f"Invalid JSON response: {response.stdout}")
-            return "Invalid response from API", 500
+        # レスポンスがJSON形式だと仮定して、データを取得
+        data = json.loads(response.stdout)
 
-        # 必要なデータを抽出
-        channel_data = {
-            "author": data.get("author", "No author"),
-            "authorId": data.get("authorId", "No authorId"),
-            "authorBannerUrl": data.get("authorBanners", [{}])[0].get("url", "No banner URL"),
-            "description": data.get("description", "No description"),
-            "tags": data.get("tags", []),
-            "latestVideos": [
-                {
-                    "title": video.get("title", "No title"),
-                    "videoId": video.get("videoId", "No videoId"),
-                    "description": video.get("description", "No description"),
-                    "viewCountText": video.get("viewCountText", "No view count text"),
-                    "publishedText": video.get("publishedText", "No published date"),
-                }
-                for video in data.get("latestVideos", [])
-            ],
-        }
+        # 必要なデータを整形して取得
+        trending_videos = [
+            {
+                "title": item.get("title", "No title"),
+                "videoId": item.get("videoId", "No videoId"),
+                "author": item.get("author", "No author"),
+                "authorId": item.get("authorId", "No authorId"),
+                "videoThumbnail": item.get("videoThumbnails", [{}])[0].get("url", "No thumbnail URL"),
+                "viewCountText": item.get("viewCountText", "No view count text"),
+                "publishedText": item.get("publishedText", "No published text"),
+                "lengthSeconds": item.get("lengthSeconds", "No length")
+            }
+            for item in data.get("items", [])
+        ]
 
-        # チャンネル情報テンプレート
+        # 動的なHTMLテンプレート
         html_template = """
         <!DOCTYPE html>
-        <html lang="ja">
+        <html lang="en">
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>{{ author }}</title>
+            <title>Trending Videos</title>
         </head>
         <body>
-        <div class="pure-u-1 pure-u-md-12-24 searchbar">
-                <form class="pure-form" action="./search" method="get">
-                    <fieldset>
-                        <input type="search" id="searchbox" autocomplete="on" autocorrect="on" autocapitalize="none" spellcheck="false" autofocus="" name="q" placeholder="検索" title="検索" value="">
-                    </fieldset>
-                </form>
-            </div>
-            <h1>{{ author }}</h1>
-            <img src="{{ authorBannerUrl }}" alt="Author Banner" style="width:100%; max-height:300px;"><br>
-            <p><strong>チャンネルID:</strong> {{ authorId }}</p><br>
-            <p><strong>説明:</strong> {{ description }}</p><br>
-            <p><strong>タグ:</strong> {{ tags | join(', ') }}</p><br>
-            <h2>最新動画</h2>
+            <h1>Trending Videos in Japan</h1>
             <ul>
-            {% for video in latestVideos %}
+            {% for result in trending_videos %}
                 <li>
-                    <a href="./watch?v={{ video.videoId }}">
-                    <img src="https://img.youtube.com/vi/{{ video.videoId }}/0.jpg" />
-                        <h3>{{ video.title }}</h3>
-                        <p>{{ video.description }}</p>
-                        <p><strong>視聴数:</strong> {{ video.viewCountText }}</p>
-                        <p><strong>公開日:</strong> {{ video.publishedText }}</p>
+                    <a href="/watch?v={{ result.videoId }}">
+                        <img src="{{ result.videoThumbnail }}" alt="{{ result.title }}">
+                        <h3>{{ result.title }}</h3>
                     </a>
+                    <p><strong>Author:</strong> <a href="/channel?c={{ result.authorId }}">{{ result.author }}</a></p>
+                    <p><strong>View Count:</strong> {{ result.viewCountText }}</p>
+                    <p><strong>Published:</strong> {{ result.publishedText }}</p>
+                    <p><strong>Length:</strong> {{ result.lengthSeconds }} seconds</p>
                 </li>
-            {% else %}
-                <li>動画が見つかりません。</li>
             {% endfor %}
             </ul>
         </body>
@@ -199,12 +178,10 @@ def channel_page():
         """
 
         # テンプレートをレンダリングして返す
-        return render_template_string(html_template, **channel_data)
+        return render_template_string(html_template, trending_videos=trending_videos)
 
     except Exception as e:
-        # 詳細なエラーメッセージとスタックトレースをログに出力
         print(f"An error occurred: {e}")
-        print("Stack trace:", traceback.format_exc())
         return "内部サーバーエラー https://inv.nadeko.net/ がAPIとして機能することを確認し、もう一度読み込み直してください。shortは見れないものが多いです。", 500
 
 
@@ -390,10 +367,6 @@ def search_videos():
         print("Stack trace:", traceback.format_exc())
         return "内部サーバーエラー https://inv.nadeko.net/ がAPIとして機能することを確認し、もう一度読み込み直してください。shortは見れないものが多いです。", 500
 
-
-@app.route('/home')
-def home():
-    return render_template('home.html')
 
 
 @app.route('/')
