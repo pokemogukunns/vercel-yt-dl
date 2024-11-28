@@ -195,7 +195,7 @@ def channel_page():
         # 詳細なエラーメッセージとスタックトレースをログに出力
         print(f"An error occurred: {e}")
         print("Stack trace:", traceback.format_exc())
-        return "Internal Server Error", 500
+        return "内部サーバーエラー https://inv.nadeko.net/ がAPIとして機能することを確認し、もう一度読み込み直してください。shortは見れないものが多いです。", 500
 
 
 
@@ -272,7 +272,7 @@ def search_videos():
     except Exception as e:
         print(f"An error occurred: {e}")
         print("Stack trace:", traceback.format_exc())
-        return "Internal Server Error", 500
+        return "内部サーバーエラー https://inv.nadeko.net/ がAPIとして機能することを確認し、もう一度読み込み直してください。shortは見れないものが多いです。", 500
 
 
 @app.route('/home')
