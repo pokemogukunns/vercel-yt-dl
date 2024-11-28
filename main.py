@@ -66,6 +66,13 @@ def watch_video():
             <title>{{ title }}</title>
         </head>
         <body>
+        <div class="pure-u-1 pure-u-md-12-24 searchbar">
+                <form class="pure-form" action="./search" method="get">
+                    <fieldset>
+                        <input type="search" id="searchbox" autocomplete="on" autocorrect="on" autocapitalize="none" spellcheck="false" autofocus="" name="q" placeholder="検索" title="検索" value="">
+                    </fieldset>
+                </form>
+            </div>
             <video style="outline:none;width:100%;background-color:#000;" playsinline="" poster="https://img.youtube.com/vi/{{ videoId }}/0.jpg" controls="" loadedmetadata="settime()" loop="">
             <source src="{{ formatStreamsUrl }}">
             </video><br>
@@ -164,6 +171,13 @@ def channel_page():
             <title>{{ author }}</title>
         </head>
         <body>
+        <div class="pure-u-1 pure-u-md-12-24 searchbar">
+                <form class="pure-form" action="./search" method="get">
+                    <fieldset>
+                        <input type="search" id="searchbox" autocomplete="on" autocorrect="on" autocapitalize="none" spellcheck="false" autofocus="" name="q" placeholder="検索" title="検索" value="">
+                    </fieldset>
+                </form>
+            </div>
             <h1>{{ author }}</h1>
             <img src="{{ authorBannerUrl }}" alt="Author Banner" style="width:100%; max-height:300px;"><br>
             <p><strong>チャンネルID:</strong> {{ authorId }}</p><br>
@@ -247,7 +261,14 @@ def search_videos():
             <title>Search Results</title>
         </head>
         <body>
-            <h1>Search Results for "{{ query }}"</h1>
+        <div class="pure-u-1 pure-u-md-12-24 searchbar">
+                <form class="pure-form" action="./search" method="get">
+                    <fieldset>
+                        <input type="search" id="searchbox" autocomplete="on" autocorrect="on" autocapitalize="none" spellcheck="false" autofocus="" name="q" placeholder="検索" title="検索" value="">
+                    </fieldset>
+                </form>
+            </div>
+            <h1>検索結果 "{{ query }}"</h1>
             <ul>
             {% for result in search_results %}
                 <li>
