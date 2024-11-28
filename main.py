@@ -273,7 +273,7 @@ def search_videos():
             {% for result in search_results %}
                 <li>
                     <a href="./watch?v={{ result.videoId }}">
-                        <img src="{{ result.videoThumbnail }}" alt="{{ result.title }}">
+                        <img src="https://img.youtube.com/vi/{{ result.videoId }}/0.jpg" alt="{{ result.title }}">
                         <h3>{{ result.title }}</h3>
                     </a>
                     <p><strong>Author:</strong> <a href="./channel?c={{ result.authorId }}">{{ result.author }}</a></p>
