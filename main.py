@@ -117,6 +117,100 @@ def watch_video():
 
 
 
+@app.route('/home')
+def channel_page():
+    
+        # curlコマンドを実行してチャンネルデータを取得
+        curl_command = [
+            "curl", "-s", f"https://thingproxy.freeboard.io/fetch/https://inv.nadeko.net/api/v1/trending?region=JP"
+        ]
+        response = subprocess.run(curl_command, capture_output=True, text=True)
+
+        if response.returncode != 0:
+            print(f"Error executing curl: {response.stderr}")
+            return "Failed to fetch data", 500
+
+        # JSONレスポンスを解析
+        try:
+            data = json.loads(response.stdout)
+        except json.JSONDecodeError:
+            print(f"Invalid JSON response: {response.stdout}")
+            return "Invalid response from API", 500
+
+        # 必要なデータを抽出
+        channel_data = {
+            "author": data.get("author", "No author"),
+            "authorId": data.get("authorId", "No authorId"),
+            "authorBannerUrl": data.get("authorBanners", [{}])[0].get("url", "No banner URL"),
+            "description": data.get("description", "No description"),
+            "tags": data.get("tags", []),
+            "latestVideos": [
+                {
+                    "title": video.get("title", "No title"),
+                    "videoId": video.get("videoId", "No videoId"),
+                    "description": video.get("description", "No description"),
+                    "viewCountText": video.get("viewCountText", "No view count text"),
+                    "publishedText": video.get("publishedText", "No published date"),
+                }
+                for video in data.get("latestVideos", [])
+            ],
+        }
+
+        # チャンネル情報テンプレート
+        html_template = """
+        <!DOCTYPE html>
+        <html lang="ja">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>{{ author }}</title>
+        </head>
+        <body>
+        <div class="pure-u-1 pure-u-md-12-24 searchbar">
+                <form class="pure-form" action="./search" method="get">
+                    <fieldset>
+                        <input type="search" id="searchbox" autocomplete="on" autocorrect="on" autocapitalize="none" spellcheck="false" autofocus="" name="q" placeholder="検索" title="検索" value="">
+                    </fieldset>
+                </form>
+            </div>
+            <h1>{{ author }}</h1>
+            <img src="{{ authorBannerUrl }}" alt="Author Banner" style="width:100%; max-height:300px;"><br>
+            <p><strong>チャンネルID:</strong> {{ authorId }}</p><br>
+            <p><strong>説明:</strong> {{ description }}</p><br>
+            <p><strong>タグ:</strong> {{ tags | join(', ') }}</p><br>
+            <h2>最新動画</h2>
+            <ul>
+            {% for video in latestVideos %}
+                <li>
+                    <a href="./watch?v={{ video.videoId }}">
+                    <img src="https://img.youtube.com/vi/{{ video.videoId }}/0.jpg" />
+                        <h3>{{ video.title }}</h3>
+                        <p>{{ video.description }}</p>
+                        <p><strong>視聴数:</strong> {{ video.viewCountText }}</p>
+                        <p><strong>公開日:</strong> {{ video.publishedText }}</p>
+                    </a>
+                </li>
+            {% else %}
+                <li>動画が見つかりません。</li>
+            {% endfor %}
+            </ul>
+        </body>
+        </html>
+        """
+
+        # テンプレートをレンダリングして返す
+        return render_template_string(html_template, **channel_data)
+
+    except Exception as e:
+        # 詳細なエラーメッセージとスタックトレースをログに出力
+        print(f"An error occurred: {e}")
+        print("Stack trace:", traceback.format_exc())
+        return "内部サーバーエラー https://inv.nadeko.net/ がAPIとして機能することを確認し、もう一度読み込み直してください。shortは見れないものが多いです。", 500
+
+
+
+
+
 @app.route('/channel')
 def channel_page():
     try:
