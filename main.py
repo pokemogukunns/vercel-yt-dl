@@ -188,6 +188,7 @@ def channel_page():
             {% for video in latestVideos %}
                 <li>
                     <a href="./watch?v={{ video.videoId }}">
+                    <img src="https://img.youtube.com/vi/{{ video.videoId }}/0.jpg" />
                         <h3>{{ video.title }}</h3>
                         <p>{{ video.description }}</p>
                         <p><strong>視聴数:</strong> {{ video.viewCountText }}</p>
