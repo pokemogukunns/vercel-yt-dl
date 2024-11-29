@@ -98,7 +98,7 @@ def watch_video():
                 <li>利用可能な推奨ビデオはありません。</li>
             {% endfor %}
             </ul><br>
-            
+            {{ json_data }}
         </body>
         </html>
         """
@@ -173,6 +173,7 @@ def trending_videos():
                 </li>
             {% endfor %}
             </ul>
+            {{ json_data }}
         </body>
         </html>
         """
@@ -270,6 +271,7 @@ def channel_page():
                 <li>動画が見つかりません。</li>
             {% endfor %}
             </ul>
+            {{ json_data }}
         </body>
         </html>
         """
@@ -355,6 +357,7 @@ def search_videos():
                 </li>
             {% endfor %}
             </ul>
+            {{ json_data }}
         </body>
         </html>
         """
