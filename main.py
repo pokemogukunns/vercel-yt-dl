@@ -258,8 +258,9 @@ def watch_api():
 
 
 @app.route('/home')
-def trending_videos():
+def watch_jp():
     try:
+
         # `curl`コマンドを使ってAPIデータを取得
         curl_command = [
             "curl", "-s", "https://thingproxy.freeboard.io/fetch/https://inv.nadeko.net/api/v1/trending?region=JP"
@@ -313,7 +314,6 @@ def trending_videos():
                 </li>
             {% endfor %}
             </ul>
-            {{ json_data }}
         </body>
         </html>
         """
