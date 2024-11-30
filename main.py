@@ -152,6 +152,7 @@ def watch_api():
                     "videoId": item.get("videoId", "No videoId"),
                     "title": item.get("title", "No title"),
                     "author": item.get("author", "No author"),
+                    "authorId": item.get("authorId", "No author"),
                     "authorUrl": item.get("authorUrl", "No author URL"),
                     "viewCountText": item.get("viewCountText", "No view count text"),
                     "viewCount": item.get("viewCount", "No view count")
