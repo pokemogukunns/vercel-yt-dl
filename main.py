@@ -121,15 +121,15 @@ def watch_video():
 
 
 @app.route('/api')
-def watch_video():
+def watch_api():
     try:
-        videoid = request.args.get('v')
-        if not videoid:
+        apiid = request.args.get('p')
+        if not apiid:
             return "No video ID provided", 400
 
         # curlコマンドを実行してAPIデータを取得
         curl_command = [
-            "curl", "-s", f"https://thingproxy.freeboard.io/fetch/https://inv.nadeko.net/api/v1/videos/{videoid}"
+            "curl", "-s", f"https://thingproxy.freeboard.io/fetch/https://inv.nadeko.net/api/v1/videos/{apiid}"
         ]
         response = subprocess.run(curl_command, capture_output=True, text=True)
 
@@ -141,7 +141,7 @@ def watch_video():
         data = json.loads(response.stdout)
 
         # 必要なデータを取り出す
-        video_data = {
+        api_data = {
             "title": data.get("title", "No title"),
             "videoId": data.get("videoId", "No videoId"),
             "authorThumbnails": data.get("authorThumbnails", "No authorThumbnails"),
@@ -209,18 +209,18 @@ def watch_video():
   {% for video in recommendedVideos %}
   "recommendedVideos": [
     {
-      "videoId": "{{ video.videoId }}",
-      "title": "{{ video.title }}",
+      "videoId": "{{ api.videoId }}",
+      "title": "{{ api.title }}",
       "videoThumbnails": [
         {
-          "url": "https://img.youtube.com/vi/{{ video.videoId }}/0.jpg",
+          "url": "https://img.youtube.com/vi/{{ api.videoId }}/0.jpg",
         }
       ],
-      "author": "{{ video.author }}",
+      "author": "{{ api.author }}",
       "authorUrl": "/channel/{{ authorId }}",
       "authorId": "{{ authorId }}",
-      "viewCountText": "{{ video.viewCountText }}",
-      "viewCount": {{ video.viewCount }}
+      "viewCountText": "{{ api.viewCountText }}",
+      "viewCount": {{ api.viewCount }}
     },
   ]
   {% else %}
