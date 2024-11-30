@@ -172,13 +172,14 @@ def watch_video():
         }
 
         #
-        # video.htmlテンプレート(動的にHTMLを変更)
+        # api.htmlテンプレート(動的にHTMLを変更)
         html_template = """
-        #
+
 {
   "type": "video",
   "title": "{{ title }}",
   "videoId": "{{ videoId }}",
+  "storyboardWidth": "{{ storyboardWidth }}"
   "videoThumbnails": [
     {
       "url": "https://img.youtube.com/vi/{{ videoId }}/0.jpg",
@@ -195,39 +196,14 @@ def watch_video():
       "url": "{{ authorThumbnails }}",
     },
   ],
-  "subCountText": "7.09K",
-  "lengthSeconds": 1509,
   "adaptiveFormats": [
     {
-      "init": "0-631",
-      "index": "632-2487",
-      "bitrate": "131664",
       "url": "{{ adaptiveFormatsUrl }}",
-      "itag": "140",
-      "type": "audio/mp4; codecs=\"mp4a.40.2\"",
-      "clen": "24407521",
-      "lmt": "1693560460480545",
-      "projectionType": "RECTANGULAR",
-      "container": "m4a",
-      "encoding": "aac",
-      "audioQuality": "AUDIO_QUALITY_MEDIUM",
-      "audioSampleRate": 44100,
-      "audioChannels": 2
     }
   ],
   "formatStreams": [
     {
       "url": "{{ formatStreamsUrl }}",
-      "itag": "18",
-      "type": "video/mp4; codecs=\"avc1.42001E, mp4a.40.2\"",
-      "quality": "medium",
-      "bitrate": "466305",
-      "fps": 30,
-      "size": "640x360",
-      "resolution": "360p",
-      "qualityLabel": "360p",
-      "container": "mp4",
-      "encoding": "h264"
     }
   ],
   {% for video in recommendedVideos %}
@@ -237,45 +213,20 @@ def watch_video():
       "title": "{{ video.title }}",
       "videoThumbnails": [
         {
-          "quality": "maxres",
           "url": "https://img.youtube.com/vi/{{ video.videoId }}/0.jpg",
-          "width": 1280,
-          "height": 720
         }
       ],
       "author": "{{ video.author }}",
       "authorUrl": "/channel/{{ authorId }}",
       "authorId": "{{ authorId }}",
-      "authorVerified": false,
-      "lengthSeconds": 1013,
-      "viewCountText": "94",
-      "viewCount": 94
+      "viewCountText": "{{ video.viewCountText }}",
+      "viewCount": {{ video.viewCount }}
     },
   ]
   {% else %}
     {"error":"利用可能な推奨ビデオはありません。"}
 {% endfor %}
 }
-
-            <p><strong>概要欄</strong>{{ storyboardWidth }}</p><br>
-            <p><strong>視聴数:</strong> {{ viewCount }} 回視聴</p><br>
-            <p><strong>画質:</strong> {{ quality }}</p><br>
-            <p><strong>公開日：</strong> {{ publishedText }} ({{ published }})</p><br>
-               <ul>
-            {% for video in recommendedVideos %}
-                <li>
-                    <strong></strong> <a href="./watch?v={{ video.videoId }}">
-                    <img src="https://img.youtube.com/vi/{{ video.videoId }}/0.jpg" /><br>
-                    <strong></strong> {{ video.title }}<br></a>
-                    <strong></strong> <a href="./channel?c={{ authorId }}">{{ video.author }}</a><br>
-                    <strong></strong> {{ video.viewCountText }} ({{ video.viewCount }} views)
-                </li>
-            {% else %}
-                <li>利用可能な推奨ビデオはありません。</li>
-            {% endfor %}
-            </ul><br>
-        </body>
-        </html>
         """
 
         # テンプレートをレンダリングして返す
