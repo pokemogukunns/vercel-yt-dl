@@ -173,19 +173,7 @@ def watch_video():
         # video.htmlテンプレート(動的にHTMLを変更)
         html_template = """
         #
-        <title>{{ title }}</title>
-        </head>
-        <body>
-        <div class="pure-u-1 pure-u-md-12-24 searchbar">
-                <form class="pure-form" action="./search" method="get">
-                    <fieldset>
-                        <input type="search" id="searchbox" autocomplete="on" autocorrect="on" autocapitalize="none" spellcheck="false" autofocus="" name="q" placeholder="検索" title="検索" value="">
-                    </fieldset>
-                </form>
-            </div>
-            <video style="outline:none;width:100%;background-color:#000;" playsinline="" poster="https://img.youtube.com/vi/{{ videoId }}/0.jpg" controls="" loadedmetadata="settime()" loop="">
-            <source src="{{ formatStreamsUrl }}">
-            </video><br>
+
             <h1>{{ title }}</h1><br>
             <p><strong>Video ID:</strong> {{ videoId }}</p><br>
             <p><strong>概要欄</strong>{{ storyboardWidth }}</p><br>
@@ -222,6 +210,26 @@ def watch_video():
         print(f"エラーが発生しました: {e}")
         print("Stack trace:", traceback.format_exc())
         return "内部サーバーエラー https://inv.nadeko.net/ がAPIとして機能することを確認し、もう一度読み込み直してください。shortは見れないものが多いです。", 500
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
