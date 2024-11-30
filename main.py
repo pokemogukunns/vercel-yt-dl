@@ -169,58 +169,58 @@ def watch_api():
 
         # api.htmlテンプレート(動的にHTMLを変更)
         html_template = """
-        {
-          "type": "video",
-          "title": "{{ title }}",
-          "videoId": "{{ videoId }}",
-          "storyboardWidth": "{{ storyboardWidth }}",
-          "videoThumbnails": [
-            {
-              "url": "https://img.youtube.com/vi/{{ videoId }}/0.jpg"
-            }
-          ],
-          "published": "{{ published }}",
-          "publishedText": "{{ publishedText }}",
-          "viewCount": "{{ viewCount }}",
-          "author": "{{ author }}",
-          "authorId": "{{ authorId }}",
-          "authorUrl": "/channel/{{ authorId }}",
-          "authorThumbnails": [
-            {
-              "url": "{{ authorThumbnails }}"
-            }
-          ],
-          "adaptiveFormats": [
-            {
-              "url": "{{ adaptiveFormatsUrl }}"
-            }
-          ],
-          "formatStreams": [
-            {
-              "url": "{{ formatStreamsUrl }}"
-            }
-          ],
-          "recommendedVideos": [
+        {\n
+          "type": "video",\n
+          "title": "{{ title }}",\n
+          "videoId": "{{ videoId }}",\n
+          "storyboardWidth": "{{ storyboardWidth }}",\n
+          "videoThumbnails": [\n
+            {\n
+              "url": "https://img.youtube.com/vi/{{ videoId }}/0.jpg"\n
+            }\n
+          ],\n
+          "published": "{{ published }}",\n
+          "publishedText": "{{ publishedText }}",\n
+          "viewCount": "{{ viewCount }}",\n
+          "author": "{{ author }}",\n
+          "authorId": "{{ authorId }}",\n
+          "authorUrl": "/channel/{{ authorId }}",\n
+          "authorThumbnails": [\n
+            {\n
+              "url": "{{ authorThumbnails }}"\n
+            }\n
+          ],\n
+          "adaptiveFormats": [\n
+            {\n
+              "url": "{{ adaptiveFormatsUrl }}"\n
+            }\n
+          ],\n
+          "formatStreams": [\n
+            {\n
+              "url": "{{ formatStreamsUrl }}"\n
+            }\n
+          ],\n
+          "recommendedVideos": [\n
             {% for video in recommendedVideos %}
-            {
-              "videoId": "{{ video.videoId }}",
-              "title": "{{ video.title }}",
-              "videoThumbnails": [
-                {
-                  "url": "https://img.youtube.com/vi/{{ video.videoId }}/0.jpg"
-                }
-              ],
-              "author": "{{ video.author }}",
-              "authorUrl": "/channel/{{ video.authorId }}",
-              "authorId": "{{ video.authorId }}",
-              "viewCountText": "{{ video.viewCountText }}",
-              "viewCount": "{{ video.viewCount }}"
-            },
+            {\n
+              "videoId": "{{ video.videoId }}",\n
+              "title": "{{ video.title }}",\n
+              "videoThumbnails": [\n
+                {\n
+                  "url": "https://img.youtube.com/vi/{{ video.videoId }}/0.jpg"\n
+                }\n
+              ],\n
+              "author": "{{ video.author }}",\n
+              "authorUrl": "/channel/{{ video.authorId }}",\n
+              "authorId": "{{ video.authorId }}",\n
+              "viewCountText": "{{ video.viewCountText }}",\n
+              "viewCount": "{{ video.viewCount }}"\n
+            },\n
             {% else %}
-            {"error": "利用可能な推奨ビデオはありません。"}
+            {"error": "利用可能な推奨ビデオはありません。"}\n
             {% endfor %}
-          ]
-        }
+          ]\n
+        }\n
         """
 
         # テンプレートをレンダリングして返す
