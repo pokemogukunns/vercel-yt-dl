@@ -29,6 +29,7 @@ def watch_video():
         video_data = {
             "title": data.get("title", "No title"),
             "videoId": data.get("videoId", "No videoId"),
+            "authorThumbnails": data.get("authorThumbnails", "No authorThumbnails"),
             # adaptiveFormatsがリストの場合、最初の要素のURLを取得
             "adaptiveFormatsUrl": data.get("adaptiveFormats", [{}])[0].get("url", "No adaptiveFormats URL"),
             # 同様にformatStreamsがリストの場合
@@ -81,7 +82,7 @@ def watch_video():
             <p><strong>概要欄</strong>{{ storyboardWidth }}</p><br>
             <a href="{{ adaptiveFormatsUrl }}">音声をダウンロード</a><br>
             <a href="{{ formatStreamsUrl }}">動画をダウンロード</a><br>
-            <img src="{{ url }}"> <a href="/channel?c={{ authorId }}">{{ author }}</a><br>
+            <img src="{{ authorThumbnails }}"> <a href="/channel?c={{ authorId }}">{{ author }}</a><br>
             <p><strong>視聴数:</strong> {{ viewCount }} 回視聴</p><br>
             <p><strong>画質:</strong> {{ quality }}</p><br>
             <p><strong>公開日：</strong> {{ publishedText }} ({{ published }})</p><br>
@@ -143,6 +144,7 @@ def watch_video():
         video_data = {
             "title": data.get("title", "No title"),
             "videoId": data.get("videoId", "No videoId"),
+            "authorThumbnails": data.get("authorThumbnails", "No authorThumbnails"),
             # adaptiveFormatsがリストの場合、最初の要素のURLを取得
             "adaptiveFormatsUrl": data.get("adaptiveFormats", [{}])[0].get("url", "No adaptiveFormats URL"),
             # 同様にformatStreamsがリストの場合
@@ -179,45 +181,22 @@ def watch_video():
   "videoId": "{{ videoId }}",
   "videoThumbnails": [
     {
-      "url": "https://inv.nadeko.net/vi/b0tbxShxFws/maxres.jpg",
+      "url": "https://img.youtube.com/vi/{{ videoId }}/0.jpg",
     }
   ],
-  "storyboards": [
-    {
-      "templateUrl": "https://i.ytimg.com/sb/b0tbxShxFws/storyboard3_L3/M$M.jpg?sqp=-oaymwENSDfyq4qpAwVwAcABBqLzl_8DBgj2qLqnBg%3D%3D&sigh=rs%24AOn4CLCTH-7GACWwWFKDtSRY8FKFyd9aGg",
-    }
-  ],
-  "description": "",
-  "descriptionHtml": "",
-  "published": 1693267200,
-  "publishedText": "1年前",
-  "keywords": [],
-  "viewCount": 31192,
-  "likeCount": 0,
-  "dislikeCount": 0,
-  "paid": false,
-  "premium": false,
-  "isFamilyFriendly": true,
-  "genre": "Education",
-  "genreUrl": null,
+  "published": {{ published }},
+  "publishedText": "{{ publishedText }}",
+  "viewCount": {{ viewCount }},
   "author": "{{ author }}",
   "authorId": "{{ authorId }}",
   "authorUrl": "/channel/{{ authorId }}",
-  "authorVerified": false,
   "authorThumbnails": [
     {
-      "url": "https://yt3.ggpht.com/ytc/AIdro_nG_pLAgEPHnWUEYGcnOnzJ08ED9uoCA1O0rURvrZgejA=s32-c-k-c0x00ffffff-no-rj",
+      "url": "{{ authorThumbnails }}",
     },
   ],
   "subCountText": "7.09K",
   "lengthSeconds": 1509,
-  "allowRatings": false,
-  "rating": 0,
-  "isListed": true,
-  "liveNow": false,
-  "isPostLiveDvr": false,
-  "isUpcoming": false,
-  "dashUrl": "https://inv.nadeko.net/api/manifest/dash/id/b0tbxShxFws",
   "adaptiveFormats": [
     {
       "init": "0-631",
@@ -251,40 +230,34 @@ def watch_video():
       "encoding": "h264"
     }
   ],
+  {% for video in recommendedVideos %}
   "recommendedVideos": [
     {
-      "videoId": "DQyH7jBD0hY",
-      "title": "Learn English quickly with Smart Podcast | Episode 15",
+      "videoId": "{{ video.videoId }}",
+      "title": "{{ video.title }}",
       "videoThumbnails": [
         {
           "quality": "maxres",
-          "url": "https://inv.nadeko.net/vi/DQyH7jBD0hY/maxres.jpg",
+          "url": "https://img.youtube.com/vi/{{ video.videoId }}/0.jpg",
           "width": 1280,
           "height": 720
         }
       ],
-      "author": "English Smart Podcast",
-      "authorUrl": "/channel/UCS5SY45nVDDAQTBmPCLGHbQ",
-      "authorId": "UCS5SY45nVDDAQTBmPCLGHbQ",
+      "author": "{{ video.author }}",
+      "authorUrl": "/channel/{{ authorId }}",
+      "authorId": "{{ authorId }}",
       "authorVerified": false,
       "lengthSeconds": 1013,
       "viewCountText": "94",
       "viewCount": 94
     },
-      ],
-      "author": "Marisa's English Adventure",
-      "authorUrl": "/channel/UCwbcobsHlcpXnCkhIEac6EQ",
-      "authorId": "UCwbcobsHlcpXnCkhIEac6EQ",
-      "authorVerified": false,
-      "lengthSeconds": 355,
-      "viewCountText": "659",
-      "viewCount": 659
-    },
   ]
+  {% else %}
+    {"error":"利用可能な推奨ビデオはありません。"}
+{% endfor %}
 }
 
             <p><strong>概要欄</strong>{{ storyboardWidth }}</p><br>
-            <img src="{{ url }}"> <a href="/channel?c={{ authorId }}">{{ author }}</a><br>
             <p><strong>視聴数:</strong> {{ viewCount }} 回視聴</p><br>
             <p><strong>画質:</strong> {{ quality }}</p><br>
             <p><strong>公開日：</strong> {{ publishedText }} ({{ published }})</p><br>
