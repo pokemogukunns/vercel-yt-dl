@@ -230,7 +230,7 @@ def watch_api():
         """
 
         # テンプレートをレンダリングして返す
-        return render_template_string(html_template, **video_data)
+        return render_template_string(html_template, **api_data)
      
     
     except Exception as e:
