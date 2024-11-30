@@ -176,26 +176,15 @@ def watch_video():
 {
   "type": "video",
   "title": "{{ title }}",
-  "videoId": "b0tbxShxFws",
+  "videoId": "{{ videoId }}",
   "videoThumbnails": [
     {
-      "quality": "maxres",
       "url": "https://inv.nadeko.net/vi/b0tbxShxFws/maxres.jpg",
-      "width": 1280,
-      "height": 720
     }
   ],
   "storyboards": [
     {
-      "url": "/api/v1/storyboards/b0tbxShxFws?width=320&height=180",
       "templateUrl": "https://i.ytimg.com/sb/b0tbxShxFws/storyboard3_L3/M$M.jpg?sqp=-oaymwENSDfyq4qpAwVwAcABBqLzl_8DBgj2qLqnBg%3D%3D&sigh=rs%24AOn4CLCTH-7GACWwWFKDtSRY8FKFyd9aGg",
-      "width": 320,
-      "height": 180,
-      "count": 152,
-      "interval": 10000,
-      "storyboardWidth": 3,
-      "storyboardHeight": 3,
-      "storyboardCount": 17
     }
   ],
   "description": "",
@@ -211,15 +200,13 @@ def watch_video():
   "isFamilyFriendly": true,
   "genre": "Education",
   "genreUrl": null,
-  "author": "Eiken Foundation of Japan",
-  "authorId": "UCYLj-_GA6hHV0fd6A9pMGow",
-  "authorUrl": "/channel/UCYLj-_GA6hHV0fd6A9pMGow",
+  "author": "{{ author }}",
+  "authorId": "{{ authorId }}",
+  "authorUrl": "/channel/{{ authorId }}",
   "authorVerified": false,
   "authorThumbnails": [
     {
       "url": "https://yt3.ggpht.com/ytc/AIdro_nG_pLAgEPHnWUEYGcnOnzJ08ED9uoCA1O0rURvrZgejA=s32-c-k-c0x00ffffff-no-rj",
-      "width": 32,
-      "height": 32
     },
   ],
   "subCountText": "7.09K",
@@ -236,7 +223,7 @@ def watch_video():
       "init": "0-631",
       "index": "632-2487",
       "bitrate": "131664",
-      "url": "https://rr5---sn-uxgg5-njall.googlevideo.com/videoplayback?expire=1732947479&ei=t1lKZ8T7HcSa-LAP9tXTkAc&ip=186.105.135.2&id=o-AENVfEsZZWhYzdCbUPI-vImVvCghHteANDa15bobFGdu&itag=140&source=youtube&requiressl=yes&xpc=EgVo2aDSNQ%3D%3D&met=1732925879%2C&mh=jG&mm=31%2C29&mn=sn-uxgg5-njall%2Csn-uxgg5-njaed&ms=au%2Crdu&mv=m&mvi=5&pl=19&rms=au%2Cau&initcwndbps=2130000&bui=AQn3pFSF0H7g2gyAhdZtd7e04ICfNzC58h7omyEl18gcrwn8lV8EXydUYYfxS1H_M_jCBRn-fAwQfVkQ&spc=qtApAf0U6DX4dAZRvrtzuOGblFhz0Qj-B4SLDpT2qfrIZkp606b30-EpTD0g&vprv=1&svpuc=1&mime=audio%2Fmp4&ns=13kmSTCEkfIMEOYJ_A07a-IQ&rqh=1&gir=yes&clen=24407521&ratebypass=yes&dur=1508.089&lmt=1693560460480545&mt=1732925365&fvip=3&keepalive=yes&fexp=51326932%2C51335594&c=WEB&sefc=1&txp=5318224&n=SGlh7GDJQ7_Iew&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Cxpc%2Cbui%2Cspc%2Cvprv%2Csvpuc%2Cmime%2Cns%2Crqh%2Cgir%2Cclen%2Cratebypass%2Cdur%2Clmt&sig=AJfQdSswRAIgZ5s5fKS1rdpeTHYGBmQy92B4Mtg01ws312c1dBqGxyMCIBvr2U2RF12nr6FVaN5WI84RpcF1KdY_yTcNInaADrSP&lsparams=met%2Cmh%2Cmm%2Cmn%2Cms%2Cmv%2Cmvi%2Cpl%2Crms%2Cinitcwndbps&lsig=AGluJ3MwRQIgTZPXykTqCEsa4mW-2L6ba02UkKnBY6L06XqIvWt_oggCIQCzGplfkhGnF8VXYWXc_P_gFMTazE_XSlqx9tnSR9Z6xg%3D%3D&pot=MnRq9bywjIhAa2rNNl4PwaRveWDHtTfryA6TLKmTJalZzwcVWJlWpCM8BcrotpmQWa4JK6nxFZwMVsRVb9N2qwpKt6ZrRzk6jccaztfL9FDByAaSI_JV3_fqCO9gpNFZDaxEiugTg3nqyhlcF-NcuN-nh4z_EA%3D%3D",
+      "url": "{{ adaptiveFormatsUrl }}",
       "itag": "140",
       "type": "audio/mp4; codecs=\"mp4a.40.2\"",
       "clen": "24407521",
@@ -296,10 +283,7 @@ def watch_video():
   ]
 }
 
-            <p><strong>Video ID:</strong> {{ videoId }}</p><br>
             <p><strong>概要欄</strong>{{ storyboardWidth }}</p><br>
-            <a href="{{ adaptiveFormatsUrl }}">音声をダウンロード</a><br>
-            <a href="{{ formatStreamsUrl }}">動画をダウンロード</a><br>
             <img src="{{ url }}"> <a href="/channel?c={{ authorId }}">{{ author }}</a><br>
             <p><strong>視聴数:</strong> {{ viewCount }} 回視聴</p><br>
             <p><strong>画質:</strong> {{ quality }}</p><br>
@@ -317,7 +301,6 @@ def watch_video():
                 <li>利用可能な推奨ビデオはありません。</li>
             {% endfor %}
             </ul><br>
-            {{ json_data }}
         </body>
         </html>
         """
