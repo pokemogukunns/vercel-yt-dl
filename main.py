@@ -2,6 +2,7 @@ import subprocess
 import json
 import traceback
 from flask import Flask, render_template_string, request
+from fastapi import FastAPI, Depends
 
 app = Flask(__name__)
 
