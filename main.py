@@ -5,6 +5,11 @@ from flask import Flask, render_template_string, request
 
 app = Flask(__name__)
 
+
+app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
+app.mount("/", StaticFiles(directory="./index2"), name="static")
+app.mount("/home", StaticFiles(directory="./home", html=True), name="static")
+
 @app.route('/watch')
 def watch_video():
     try:
