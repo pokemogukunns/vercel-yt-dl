@@ -12,6 +12,8 @@ app = Flask(__name__)
 app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
 app.mount("/", StaticFiles(directory="./index2"), name="static")
 app.mount("/home", StaticFiles(directory="./home"), name="static")
+from fastapi.templating import Jinja2Templates
+template = Jinja2Templates(directory='templates').TemplateResponse
 
 @app.route('/watch')
 def watch_video():
