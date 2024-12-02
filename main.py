@@ -324,6 +324,8 @@ def watch_jp():
                     <p><strong>Published:</strong> {{ result.publishedText }}</p>
                     <p><strong>Length:</strong> {{ result.lengthSeconds }} seconds</p>
                 </li>
+                {% else %}
+                <li>取得できませんでした。error message:%7Dnot%7D   </li>
             {% endfor %}
             </ul>
         </body>
