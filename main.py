@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
 app.mount("/", StaticFiles(directory="./index2"), name="static")
-app.mount("/home", StaticFiles(directory="./home", html=True), name="static")
+app.mount("/home", StaticFiles(directory="./home"), name="static")
 
 @app.route('/watch')
 def watch_video():
@@ -265,10 +265,13 @@ def watch_api():
 @app.route('/home')
 def watch_jp():
     try:
+        la_id = request.args.get('la')
+        if not la_id:
+            return "No channel ID provided", 400
 
         # `curl`コマンドを使ってAPIデータを取得
         curl_command = [
-            "curl", "-s", "https://thingproxy.freeboard.io/fetch/https://inv.nadeko.net/api/v1/trending?region=JP"
+            "curl", "-s", "https://thingproxy.freeboard.io/fetch/https://inv.nadeko.net/api/v1/trending?region={la_id}"
         ]
         response = subprocess.run(curl_command, capture_output=True, text=True)
 
@@ -328,7 +331,7 @@ def watch_jp():
 
     except Exception as e:
         print(f"An error occurred: {e}")
-        return "内部サーバーエラー https://inv.nadeko.net/ がAPIとして機能することを確認し、もう一度読み込み直してください。shortは見れないものが多いです。", 500
+        return "内部サーバーエラー https://inv.nadeko.net/ がAPIとして機能することを確認し、もう一度読み込み直してください。短い動画(１分以内)は見れないものが多いです。", 500
 
 
 
@@ -516,10 +519,6 @@ def search_videos():
         return "内部サーバーエラー https://inv.nadeko.net/ がAPIとして機能することを確認し、もう一度読み込み直してください。shortは見れないものが多いです。", 500
 
 
-
-@app.route('/')
-def index():
-    return render_template('index.html')
 
 
 if __name__ == '__main__':
