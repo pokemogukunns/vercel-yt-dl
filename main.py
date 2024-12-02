@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 
 app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
-app.mount("/", StaticFiles(directory="./index2"), name="static")
+app.mount("/index", StaticFiles(directory="./index2"), name="static")
 app.mount("/home", StaticFiles(directory="./home"), name="static")
 
 @app.route('/watch')
