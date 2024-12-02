@@ -309,10 +309,9 @@ def watch_jp():
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Trending Videos</title>
+            <title>トレンドビデオ</title>
         </head>
         <body>
-            <h1>Trending Videos in Japan</h1>
             <ul>
             {% for result in trending_videos %}
                 <li>
