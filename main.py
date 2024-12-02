@@ -3,12 +3,14 @@ import json
 import traceback
 from flask import Flask, render_template_string, request
 from fastapi import FastAPI, Depends
+from fastapi.staticfiles import StaticFiles
+
 
 app = Flask(__name__)
 
 
 app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
-app.mount("/index", StaticFiles(directory="./index2"), name="static")
+app.mount("/", StaticFiles(directory="./index2"), name="static")
 app.mount("/home", StaticFiles(directory="./home"), name="static")
 
 @app.route('/watch')
