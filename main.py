@@ -130,10 +130,13 @@ def watch_video():
 
 
 
+
+
+
 @app.route('/api')
 def watch_api():
     try:
-        apiid = request.args.get('p')
+        apiid = request.args.get('v')
         if not apiid:
             return "No video ID provided", 400
 
@@ -243,6 +246,81 @@ def watch_api():
         print("Stack trace:", traceback.format_exc())
         return "内部サーバーエラー https://inv.nadeko.net/ がAPIとして機能することを確認し、もう一度読み込み直してください。shortは見れないものが多いです。", 500
 
+
+@app.route('/api')
+def watch_apiq():
+    try:
+        apiqid = request.args.get('q')
+        if not apiqid:
+            return "No video ID provided", 400
+
+        # curlコマンドを実行してAPIデータを取得
+        curl_command = [
+            "curl", "-s", f"https://thingproxy.freeboard.io/fetch/https://inv.nadeko.net/api/v1/search?q={apiqid}"
+        ]
+        response = subprocess.run(curl_command, capture_output=True, text=True)
+
+        if response.returncode != 0:
+            print(f"Error executing curl: {response.stderr}")
+            return "Failed to fetch search results", 500
+
+        # レスポンスがJSON形式だと仮定して、データを取得
+        data = json.loads(response.stdout)
+
+        # データ形式がリストの場合に対応
+        if isinstance(data, list):
+            apiq_results = [
+                {
+                    "title": item.get("title", "No title"),
+                    "videoId": item.get("videoId", "No videoId"),
+                    "author": item.get("author", "No author"),
+                    "authorId": item.get("authorId", "No authorId"),
+                    "videoThumbnail": item.get("videoThumbnails", [{}])[0].get("url", "No thumbnail URL"),
+                    "viewCountText": item.get("viewCountText", "No view count text"),
+                    "publishedText": item.get("publishedText", "No published text"),
+                    "lengthSeconds": item.get("lengthSeconds", "No length")
+                }
+                for item in data
+            ]
+        else:
+            apiq_results = []
+
+        # api.htmlテンプレート(動的にHTMLを変更)
+        html_template = """
+        {\n
+            #https://img.youtube.com/vi/{{ videoId }}/0.jpg"
+
+          "recommendedVideos": [\n
+            {% for video in recommendedVideos %}
+            {\n
+              "videoId": "{{ video.videoId }}",\n
+              "title": "{{ video.title }}",\n
+              "videoThumbnails": [\n
+                {\n
+                  "url": "https://img.youtube.com/vi/{{ video.videoId }}/0.jpg"\n
+                }\n
+              ],\n
+              "author": "{{ video.author }}",\n
+              "authorUrl": "/channel/{{ video.authorId }}",\n
+              "authorId": "{{ video.authorId }}",\n
+              "viewCountText": "{{ video.viewCountText }}",\n
+              "viewCount": "{{ video.viewCount }}"\n
+            },\n
+            {% else %}
+            {"error": "利用可能な推奨ビデオはありません。"}\n
+            {% endfor %}
+          ]\n
+        }\n
+        """
+
+        # テンプレートをレンダリングして返す
+        return render_template_string(html_template, **api_data)
+
+    except Exception as e:
+        # 詳細なエラーメッセージとスタックトレースをログに出力
+        print(f"エラーが発生しました: {e}")
+        print("Stack trace:", traceback.format_exc())
+        return "内部サーバーエラー https://inv.nadeko.net/ がAPIとして機能することを確認し、もう一度読み込み直してください。shortは見れないものが多いです。", 500
 
 
 
