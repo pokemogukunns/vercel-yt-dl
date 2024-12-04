@@ -83,6 +83,7 @@ def watch_video():
     <link rel="stylesheet" href="https://pokemogukunns.github.io/yuki-math/css/ionicons.min.css">
     <link rel="stylesheet" href="https://pokemogukunns.github.io/yuki-math/css/default.css">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"/>
+    <link rel="icon" href="https://www.youtube.com/s/desktop/ceaca137/img/logos/favicon_32x32.png">
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
         </head>
