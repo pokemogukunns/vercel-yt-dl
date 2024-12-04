@@ -103,7 +103,8 @@ def watch_video():
             <p><strong>概要欄</strong>{{ description }}</p><br>
             <a href="{{ adaptiveFormatsUrl }}">音声をダウンロード</a><br>
             <a href="{{ formatStreamsUrl }}">動画をダウンロード</a><br>
-            <a href="/channel?c={{ authorId }}"><img src="{{ authorThumbnails }}">{{ author }}</a><br>
+            <a href="/channel?c={{ authorId }}"><div id="channel-info"></div>{{ author }}</a><br>
+                
             <p><strong>視聴数:</strong> {{ viewCount }} 回視聴</p><br>
             <p><strong>画質:</strong> {{ quality }}</p><br>
             <p><strong>公開日：</strong> {{ publishedText }} ({{ published }})</p><br>
@@ -121,6 +122,57 @@ def watch_video():
             {% endfor %}
             </ul><br>
             {{ json_data }}
+                    <p>Loading channel icon...</p>
+    </div>
+
+    <script>
+        // URL から videoID を取得する関数
+        function getVideoIdFromUrl() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get("v");
+        }
+
+        // 動画のチャンネル情報を取得して表示する関数
+        async function fetchChannelIcon() {
+            const videoId = getVideoIdFromUrl();
+
+            if (!videoId) {
+                document.getElementById("channel-info").innerHTML = "<p>Video ID not found in the URL.</p>";
+                return;
+            }
+
+            try {
+                // APIのエンドポイント（適宜変更してください）
+                const apiUrl = `https://vercel-tau-lac-41.vercel.app/api?p=${videoId}`;
+                
+                // APIにリクエスト
+                const response = await fetch(apiUrl);
+                if (!response.ok) {
+                    throw new Error(`API error: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                // 必要なデータを取得
+                const channelIconUrl = data.authorUrl || ""; // APIの仕様に応じて修正
+
+                if (channelIconUrl) {
+                    document.getElementById("channel-info").innerHTML = `
+                        <img src="${channelIconUrl}" alt="Channel Icon" style="width: 100px; height: 100px; border-radius: 50%;">
+                        <p>Channel Icon</p>
+                    `;
+                } else {
+                    document.getElementById("channel-info").innerHTML = "<p>Channel icon not found.</p>";
+                }
+            } catch (error) {
+                console.error(error);
+                document.getElementById("channel-info").innerHTML = `<p>Error fetching data: ${error.message}</p>`;
+            }
+        }
+
+        // ページが読み込まれたらデータを取得
+        fetchChannelIcon();
+    </script>
         </body>
         </html>
         """
