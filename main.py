@@ -39,6 +39,8 @@ def watch_video():
         video_data = {
             "title": data.get("title", "No title"),
             "videoId": data.get("videoId", "No videoId"),
+            "description": data.get("description", "No description"),
+            "author": data.get("author", "No author URL"),
             "authorThumbnails": data.get("authorThumbnails", "No authorThumbnails"),
             # adaptiveFormatsがリストの場合、最初の要素のURLを取得
             "adaptiveFormatsUrl": data.get("adaptiveFormats", [{}])[0].get("url", "No adaptiveFormats URL"),
@@ -75,6 +77,14 @@ def watch_video():
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>{{ title }}</title>
+            <link rel="stylesheet" href="https://pokemogukunns.github.io/yuki-math/css/empty.css">
+    <link rel="stylesheet" href="https://pokemogukunns.github.io/yuki-math/css/pure-min.css">
+    <link rel="stylesheet" href="https://pokemogukunns.github.io/yuki-math/css/grids-responsive-min.css">
+    <link rel="stylesheet" href="https://pokemogukunns.github.io/yuki-math/css/ionicons.min.css">
+    <link rel="stylesheet" href="https://pokemogukunns.github.io/yuki-math/css/default.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"/>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
         </head>
         <body>
         <div class="pure-u-1 pure-u-md-12-24 searchbar">
@@ -89,7 +99,7 @@ def watch_video():
             </video><br>
             <h1>{{ title }}</h1><br>
             <p><strong>Video ID:</strong> {{ videoId }}</p><br>
-            <p><strong>概要欄</strong>{{ storyboardWidth }}</p><br>
+            <p><strong>概要欄</strong>{{ description }}</p><br>
             <a href="{{ adaptiveFormatsUrl }}">音声をダウンロード</a><br>
             <a href="{{ formatStreamsUrl }}">動画をダウンロード</a><br>
             <img src="{{ authorThumbnails }}"> <a href="/channel?c={{ authorId }}">{{ author }}</a><br>
