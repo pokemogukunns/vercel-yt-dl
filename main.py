@@ -41,7 +41,7 @@ def watch_video():
             "videoId": data.get("videoId", "No videoId"),
             "description": data.get("description", "No description"),
             "author": data.get("author", "No author URL"),
-            "authorThumbnails": data.get("authorThumbnails", "No authorThumbnails"),
+            "authorThumbnails": data.get("authorThumbnails", [{}])[0].get("url", "No authorThumbnails URL"),
             # adaptiveFormatsがリストの場合、最初の要素のURLを取得
             "adaptiveFormatsUrl": data.get("adaptiveFormats", [{}])[0].get("url", "No adaptiveFormats URL"),
             # 同様にformatStreamsがリストの場合
@@ -103,7 +103,7 @@ def watch_video():
             <p><strong>概要欄</strong>{{ description }}</p><br>
             <a href="{{ adaptiveFormatsUrl }}">音声をダウンロード</a><br>
             <a href="{{ formatStreamsUrl }}">動画をダウンロード</a><br>
-            <img src="{{ authorThumbnails }}"> <a href="/channel?c={{ authorId }}">{{ author }}</a><br>
+            <a href="/channel?c={{ authorId }}"><img src="{{ authorThumbnails }}">{{ author }}</a><br>
             <p><strong>視聴数:</strong> {{ viewCount }} 回視聴</p><br>
             <p><strong>画質:</strong> {{ quality }}</p><br>
             <p><strong>公開日：</strong> {{ publishedText }} ({{ published }})</p><br>
