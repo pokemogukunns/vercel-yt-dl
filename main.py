@@ -310,12 +310,19 @@ def watch_api():
         return "内部サーバーエラー https://inv.nadeko.net/ がAPIとして機能することを確認し、もう一度読み込み直してください。shortは見れないものが多いです。", 500
 
 
-@app.route('/api')
+from flask import Flask, request, jsonify
+import subprocess
+import json
+import traceback
+
+app = Flask(__name__)
+
+@app.route('/api', methods=['GET', 'POST'])
 def watch_apiq():
     try:
-        apiqid = request.args.get('q')
+        apiqid = request.args.get('q') if request.method == 'GET' else request.json.get('q')
         if not apiqid:
-            return "No video ID provided", 400
+            return jsonify({"error": "No video ID provided"}), 400
 
         # curlコマンドを実行してAPIデータを取得
         curl_command = [
@@ -325,7 +332,7 @@ def watch_apiq():
 
         if response.returncode != 0:
             print(f"Error executing curl: {response.stderr}")
-            return "Failed to fetch search results", 500
+            return jsonify({"error": "Failed to fetch search results"}), 500
 
         # レスポンスがJSON形式だと仮定して、データを取得
         data = json.loads(response.stdout)
@@ -348,42 +355,17 @@ def watch_apiq():
         else:
             apiq_results = []
 
-        # api.htmlテンプレート(動的にHTMLを変更)
-        html_template = """
-        {\n
-            #https://img.youtube.com/vi/{{ videoId }}/0.jpg"
-
-          "recommendedVideos": [\n
-            {% for video in recommendedVideos %}
-            {\n
-              "videoId": "{{ video.videoId }}",\n
-              "title": "{{ video.title }}",\n
-              "videoThumbnails": [\n
-                {\n
-                  "url": "https://img.youtube.com/vi/{{ video.videoId }}/0.jpg"\n
-                }\n
-              ],\n
-              "author": "{{ video.author }}",\n
-              "authorUrl": "/channel/{{ video.authorId }}",\n
-              "authorId": "{{ video.authorId }}",\n
-              "viewCountText": "{{ video.viewCountText }}",\n
-              "viewCount": "{{ video.viewCount }}"\n
-            },\n
-            {% else %}
-            {"error": "利用可能な推奨ビデオはありません。"}\n
-            {% endfor %}
-          ]\n
-        }\n
-        """
-
-        # テンプレートをレンダリングして返す
-        return render_template_string(html_template, **api_data)
+        # JSONレスポンスを返す
+        return jsonify({"results": apiq_results}), 200
 
     except Exception as e:
         # 詳細なエラーメッセージとスタックトレースをログに出力
         print(f"エラーが発生しました: {e}")
         print("Stack trace:", traceback.format_exc())
-        return "内部サーバーエラー https://inv.nadeko.net/ がAPIとして機能することを確認し、もう一度読み込み直してください。shortは見れないものが多いです。", 500
+        return jsonify({
+            "error": "内部サーバーエラー",
+            "message": "https://inv.nadeko.net/ がAPIとして機能することを確認し、もう一度読み込み直してください。shortは見れないものが多いです。"
+        }), 500
 
 
 
