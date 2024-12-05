@@ -103,7 +103,8 @@ def watch_video():
             <p><strong>概要欄</strong>{{ description }}</p><br>
             <a href="{{ adaptiveFormatsUrl }}">音声をダウンロード</a><br>
             <a href="{{ formatStreamsUrl }}">動画をダウンロード</a><br>
-            <a href="/channel?c={{ authorId }}"><div id="channel-info"></div>{{ author }}</a><br>
+            <a href="/channel?c={{ authorId }}">{{ author }}</a><br>
+            //<div id="channel-info"></div>
                 
             <p><strong>視聴数:</strong> {{ viewCount }} 回視聴</p><br>
             <p><strong>画質:</strong> {{ quality }}</p><br>
@@ -125,7 +126,7 @@ def watch_video():
                     <p>Loading channel icon...</p>
     </div>
 
-    <script>
+    <!--<script>
         // URL から videoID を取得する関数
         function getVideoIdFromUrl() {
             const params = new URLSearchParams(window.location.search);
@@ -172,7 +173,7 @@ def watch_video():
 
         // ページが読み込まれたらデータを取得
         fetchChannelIcon();
-    </script>
+    </script>-->
         </body>
         </html>
         """
