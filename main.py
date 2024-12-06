@@ -126,54 +126,7 @@ def watch_video():
                     <p>Loading channel icon...</p>
     </div>
 
-    <!--<script>
-        // URL から videoID を取得する関数
-        function getVideoIdFromUrl() {
-            const params = new URLSearchParams(window.location.search);
-            return params.get("v");
-        }
-
-        // 動画のチャンネル情報を取得して表示する関数
-        async function fetchChannelIcon() {
-            const videoId = getVideoIdFromUrl();
-
-            if (!videoId) {
-                document.getElementById("channel-info").innerHTML = "<p>Video ID not found in the URL.</p>";
-                return;
-            }
-
-            try {
-                // APIのエンドポイント（適宜変更してください）
-                const apiUrl = `https://vercel-tau-lac-41.vercel.app/api?p=${videoId}`;
-                
-                // APIにリクエスト
-                const response = await fetch(apiUrl);
-                if (!response.ok) {
-                    throw new Error(`API error: ${response.status}`);
-                }
-
-                const data = await response.json();
-
-                // 必要なデータを取得
-                const channelIconUrl = data.authorUrl || ""; // APIの仕様に応じて修正
-
-                if (channelIconUrl) {
-                    document.getElementById("channel-info").innerHTML = `
-                        <img src="${channelIconUrl}" alt="Channel Icon" style="width: 100px; height: 100px; border-radius: 50%;">
-                        <p>Channel Icon</p>
-                    `;
-                } else {
-                    document.getElementById("channel-info").innerHTML = "<p>Channel icon not found.</p>";
-                }
-            } catch (error) {
-                console.error(error);
-                document.getElementById("channel-info").innerHTML = `<p>Error fetching data: ${error.message}</p>`;
-            }
-        }
-
-        // ページが読み込まれたらデータを取得
-        fetchChannelIcon();
-    </script>-->
+    
         </body>
         </html>
         """
