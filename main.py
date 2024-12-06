@@ -80,14 +80,15 @@ def watch_video():
         <p><strong>View Count:</strong> {{ viewCount }} views</p>
         <p><strong>Quality:</strong> {{ quality }}</p>
         <p><strong>Published:</strong> {{ publishedText }} ({{ published }})</p>
-        <a href="{{ adaptiveFormatsUrl }}">Download Audio</a><br>
-        <a href="{{ formatStreamsUrl }}">Download Video</a><br>
+        <a href="{{ adaptiveFormatsUrl }}">Download 音声</a><br>
+        <a href="{{ formatStreamsUrl }}">Download 動画</a><br>
         <a href="/channel?c={{ authorId }}">{{ author }}</a><br>
 
-        <h3>Recommended Videos:</h3>
+        <h3>おすすめ動画:</h3>
         <ul>
         {% for video in recommendedVideos %}
-            <li><a href="/watch?v={{ video.videoId }}">{{ video.title }}</a> by {{ video.author }} ({{ video.viewCountText }})</li>
+            <li><a href="/watch?v={{ video.videoId }}">
+            <img src="https://www.img.youtube.com/{{ video.videoId }}/0.jpg">{{ video.title }}</a> <br> {{ video.author }} ({{ video.viewCountText }})</li>
         {% else %}
             <li>No recommended videos available.</li>
         {% endfor %}
