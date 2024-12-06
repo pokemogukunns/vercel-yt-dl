@@ -1,424 +1,198 @@
 import subprocess
 import json
 import traceback
-from flask import Flask, render_template_string, request
-#from fastapi import FastAPI, Depends
-#from fastapi.staticfiles import StaticFiles
-
+from flask import Flask, render_template_string, request, jsonify
 
 app = Flask(__name__)
 
+# 共通のcurlコマンド実行関数
+def fetch_data_from_api(url):
+    try:
+        curl_command = ["curl", "-s", url]
+        response = subprocess.run(curl_command, capture_output=True, text=True)
+        if response.returncode != 0:
+            print(f"Error executing curl: {response.stderr}")
+            return None
+        return json.loads(response.stdout)
+    except Exception as e:
+        print(f"Error fetching data: {e}")
+        return None
 
-#app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
-#app.mount("/", StaticFiles(directory="./index2"), name="static")
-#app.mount("/home", StaticFiles(directory="./home"), name="static")
-#from fastapi.templating import Jinja2Templates
-#template = Jinja2Templates(directory='templates').TemplateResponse
 
 @app.route('/watch')
 def watch_video():
-    try:
-        videoid = request.args.get('v')
-        if not videoid:
-            return "No video ID provided", 400
+    videoid = request.args.get('v')
+    if not videoid:
+        return "No video ID provided", 400
 
-        # curlコマンドを実行してAPIデータを取得
-        curl_command = [
-            "curl", "-s", f"https://thingproxy.freeboard.io/fetch/https://inv.nadeko.net/api/v1/videos/{videoid}"
-        ]
-        response = subprocess.run(curl_command, capture_output=True, text=True)
+    # データを取得
+    url = f"https://thingproxy.freeboard.io/fetch/https://inv.nadeko.net/api/v1/videos/{videoid}"
+    data = fetch_data_from_api(url)
 
-        if response.returncode != 0:
-            print(f"Error executing curl: {response.stderr}")
-            return "Failed to fetch data", 500
+    if not data:
+        return "Failed to fetch data", 500
 
-        # レスポンスがJSON形式だと仮定して、データを取得
-        data = json.loads(response.stdout)
+    # 必要なデータを抽出
+    video_data = {
+        "title": data.get("title", "No title"),
+        "videoId": data.get("videoId", "No videoId"),
+        "description": data.get("description", "No description"),
+        "author": data.get("author", "No author"),
+        "authorThumbnails": data.get("authorThumbnails", [{}])[0].get("url", "No authorThumbnails URL"),
+        "adaptiveFormatsUrl": data.get("adaptiveFormats", [{}])[0].get("url", "No adaptiveFormats URL"),
+        "formatStreamsUrl": data.get("formatStreams", [{}])[0].get("url", "No formatStreams URL"),
+        "recommendedVideos": [
+            {
+                "videoId": item.get("videoId", "No videoId"),
+                "title": item.get("title", "No title"),
+                "author": item.get("author", "No author"),
+                "authorUrl": item.get("authorUrl", "No author URL"),
+                "viewCountText": item.get("viewCountText", "No view count text"),
+                "viewCount": item.get("viewCount", "No view count")
+            }
+            for item in data.get("recommendedVideos", [])
+        ],
+        "viewCountText": data.get("viewCountText", "No view count text"),
+        "viewCount": data.get("viewCount", "No view count"),
+        "quality": data.get("quality", "No quality"),
+        "publishedText": data.get("publishedText", "No published text"),
+        "published": data.get("published", "No published date"),
+    }
 
-        # 必要なデータを取り出す
-        video_data = {
-            "title": data.get("title", "No title"),
-            "videoId": data.get("videoId", "No videoId"),
-            "description": data.get("description", "No description"),
-            "author": data.get("author", "No author URL"),
-            "authorThumbnails": data.get("authorThumbnails", [{}])[0].get("url", "No authorThumbnails URL"),
-            # adaptiveFormatsがリストの場合、最初の要素のURLを取得
-            "adaptiveFormatsUrl": data.get("adaptiveFormats", [{}])[0].get("url", "No adaptiveFormats URL"),
-            # 同様にformatStreamsがリストの場合
-            "formatStreamsUrl": data.get("formatStreams", [{}])[0].get("url", "No formatStreams URL"),
-            "recommendedVideos": [
-                {
-                    "videoId": item.get("videoId", "No videoId"),
-                    "title": item.get("title", "No title"),
-                    "author": item.get("author", "No author"),
-                    "authorUrl": item.get("authorUrl", "No author URL"),
-                    "viewCountText": item.get("viewCountText", "No view count text"),
-                    "viewCount": item.get("viewCount", "No view count")
-                }
-                for item in data.get("recommendedVideos", [])
-            ],
-            "storyboardWidth": data.get("storyboardWidth", "No author URL"),
-            "genreUrl": data.get("author", "No author URL"),
-            "authorThumbnails": data.get("url", "No author URL"),
-            "authorId": data.get("authorId", "No author URL"),
-            "viewCountText": data.get("viewCountText", "No view count text"),
-            "viewCount": data.get("viewCount", "No view count"),
-            "quality": data.get("quality", "No quality"),
-            "publishedText": data.get("publishedText", "No published text"),
-            "published": data.get("published", "No published date"),
-        }
-
-        #
-        # video.htmlテンプレート(動的にHTMLを変更)
-        html_template = """
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>{{ title }}</title>
-            <link rel="stylesheet" href="https://pokemogukunns.github.io/yuki-math/css/empty.css">
-    <link rel="stylesheet" href="https://pokemogukunns.github.io/yuki-math/css/pure-min.css">
-    <link rel="stylesheet" href="https://pokemogukunns.github.io/yuki-math/css/grids-responsive-min.css">
-    <link rel="stylesheet" href="https://pokemogukunns.github.io/yuki-math/css/ionicons.min.css">
-    <link rel="stylesheet" href="https://pokemogukunns.github.io/yuki-math/css/default.css">
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"/>
-    <link rel="icon" href="https://www.youtube.com/s/desktop/ceaca137/img/logos/favicon_32x32.png">
-    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-        </head>
-        <body>
-        <div class="pure-u-1 pure-u-md-12-24 searchbar">
-                <form class="pure-form" action="./search" method="get">
-                    <fieldset>
-                        <input type="search" id="searchbox" autocomplete="on" autocorrect="on" autocapitalize="none" spellcheck="false" autofocus="" name="q" placeholder="検索" title="検索" value="">
-                    </fieldset>
-                </form>
-            </div>
-            <video style="outline:none;width:100%;background-color:#000;" playsinline="" poster="https://img.youtube.com/vi/{{ videoId }}/0.jpg" controls="" loadedmetadata="settime()" loop="">
+    # 動的HTMLテンプレート
+    html_template = """
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{{ title }}</title>
+        <link rel="stylesheet" href="https://pokemogukunns.github.io/yuki-math/css/empty.css">
+        <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    </head>
+    <body>
+        <h1>{{ title }}</h1>
+        <video width="100%" controls poster="https://img.youtube.com/vi/{{ videoId }}/0.jpg">
             <source src="{{ formatStreamsUrl }}">
-            </video><br>
-            <h1>{{ title }}</h1><br>
-            <p><strong>Video ID:</strong> {{ videoId }}</p><br>
-            <p><strong>概要欄</strong>{{ description }}</p><br>
-            <a href="{{ adaptiveFormatsUrl }}">音声をダウンロード</a><br>
-            <a href="{{ formatStreamsUrl }}">動画をダウンロード</a><br>
-            <a href="/channel?c={{ authorId }}">{{ author }}</a><br>
-            //<div id="channel-info"></div>
-                
-            <p><strong>視聴数:</strong> {{ viewCount }} 回視聴</p><br>
-            <p><strong>画質:</strong> {{ quality }}</p><br>
-            <p><strong>公開日：</strong> {{ publishedText }} ({{ published }})</p><br>
-               <ul>
-            {% for video in recommendedVideos %}
-                <li>
-                    <strong></strong> <a href="./watch?v={{ video.videoId }}">
-                    <img src="https://img.youtube.com/vi/{{ video.videoId }}/0.jpg" /><br>
-                    <strong></strong> {{ video.title }}<br></a>
-                    <strong></strong> <a href="./channel?c={{ authorId }}">{{ video.author }}</a><br>
-                    <strong></strong> {{ video.viewCountText }} ({{ video.viewCount }} views)
-                </li>
-            {% else %}
-                <li>利用可能な推奨ビデオはありません。</li>
-            {% endfor %}
-            </ul><br>
-            {{ json_data }}
-                    <p>Loading channel icon...</p>
-    </div>
+        </video>
+        <p><strong>Video ID:</strong> {{ videoId }}</p>
+        <p><strong>Description:</strong> {{ description }}</p>
+        <p><strong>View Count:</strong> {{ viewCount }} views</p>
+        <p><strong>Quality:</strong> {{ quality }}</p>
+        <p><strong>Published:</strong> {{ publishedText }} ({{ published }})</p>
+        <a href="{{ adaptiveFormatsUrl }}">Download Audio</a><br>
+        <a href="{{ formatStreamsUrl }}">Download Video</a><br>
+        <a href="/channel?c={{ authorId }}">{{ author }}</a><br>
 
-    
-        </body>
-        </html>
-        """
+        <h3>Recommended Videos:</h3>
+        <ul>
+        {% for video in recommendedVideos %}
+            <li><a href="/watch?v={{ video.videoId }}">{{ video.title }}</a> by {{ video.author }} ({{ video.viewCountText }})</li>
+        {% else %}
+            <li>No recommended videos available.</li>
+        {% endfor %}
+        </ul>
+    </body>
+    </html>
+    """
 
-        # テンプレートをレンダリングして返す
-        return render_template_string(html_template, **video_data)
-     
-    
-    except Exception as e:
-        # 詳細なエラーメッセージとスタックトレースをログに出力
-        print(f"エラーが発生しました: {e}")
-        print("Stack trace:", traceback.format_exc())
-        return "内部サーバーエラー https://inv.nadeko.net/ がAPIとして機能することを確認し、もう一度読み込み直してください。shortは見れないものが多いです。", 500
-
-
-
-
-
-
-
-
+    return render_template_string(html_template, **video_data)
 
 
 @app.route('/api')
 def watch_api():
-    try:
-        apiid = request.args.get('v')
-        if not apiid:
-            return "No video ID provided", 400
+    apiid = request.args.get('v')
+    if not apiid:
+        return jsonify({"error": "No video ID provided"}), 400
 
-        # curlコマンドを実行してAPIデータを取得
-        curl_command = [
-            "curl", "-s", f"https://thingproxy.freeboard.io/fetch/https://inv.nadeko.net/api/v1/videos/{apiid}"
+    # データを取得
+    url = f"https://thingproxy.freeboard.io/fetch/https://inv.nadeko.net/api/v1/videos/{apiid}"
+    data = fetch_data_from_api(url)
+
+    if not data:
+        return jsonify({"error": "Failed to fetch data"}), 500
+
+    # 必要なデータを抽出
+    api_data = {
+        "title": data.get("title", "No title"),
+        "videoId": data.get("videoId", "No videoId"),
+        "viewCountText": data.get("viewCountText", "No view count text"),
+        "viewCount": data.get("viewCount", "No view count"),
+        "recommendedVideos": [
+            {
+                "videoId": item.get("videoId", "No videoId"),
+                "title": item.get("title", "No title"),
+                "author": item.get("author", "No author"),
+                "authorId": item.get("authorId", "No author"),
+                "authorUrl": item.get("authorUrl", "No author URL"),
+                "viewCountText": item.get("viewCountText", "No view count text"),
+                "viewCount": item.get("viewCount", "No view count")
+            }
+            for item in data.get("recommendedVideos", [])
         ]
-        response = subprocess.run(curl_command, capture_output=True, text=True)
+    }
 
-        if response.returncode != 0:
-            print(f"Error executing curl: {response.stderr}")
-            return "Failed to fetch data", 500
-
-        # レスポンスがJSON形式だと仮定して、データを取得
-        data = json.loads(response.stdout)
-
-        # 必要なデータを取り出す
-        api_data = {
-            "title": data.get("title", "No title"),
-            "videoId": data.get("videoId", "No videoId"),
-            "authorThumbnails": data.get("authorThumbnails", "No authorThumbnails"),
-            "adaptiveFormatsUrl": data.get("adaptiveFormats", [{}])[0].get("url", "No adaptiveFormats URL"),
-            "formatStreamsUrl": data.get("formatStreams", [{}])[0].get("url", "No formatStreams URL"),
-            "recommendedVideos": [
-                {
-                    "videoId": item.get("videoId", "No videoId"),
-                    "title": item.get("title", "No title"),
-                    "author": item.get("author", "No author"),
-                    "authorId": item.get("authorId", "No author"),
-                    "authorUrl": item.get("authorUrl", "No author URL"),
-                    "viewCountText": item.get("viewCountText", "No view count text"),
-                    "viewCount": item.get("viewCount", "No view count")
-                }
-                for item in data.get("recommendedVideos", [])
-            ],
-            "storyboardWidth": data.get("storyboardWidth", "No storyboard width"),
-            "authorId": data.get("authorId", "No author ID"),
-            "viewCountText": data.get("viewCountText", "No view count text"),
-            "viewCount": data.get("viewCount", "No view count"),
-            "quality": data.get("quality", "No quality"),
-            "publishedText": data.get("publishedText", "No published text"),
-            "published": data.get("published", "No published date"),
-        }
-
-        # api.htmlテンプレート(動的にHTMLを変更)
-        html_template = """
-        {\n
-          "type": "video",\n
-          "title": "{{ title }}",\n
-          "videoId": "{{ videoId }}",\n
-          "storyboardWidth": "{{ storyboardWidth }}",\n
-          "videoThumbnails": [\n
-            {\n
-              "url": "https://img.youtube.com/vi/{{ videoId }}/0.jpg"\n
-            }\n
-          ],\n
-          "published": "{{ published }}",\n
-          "publishedText": "{{ publishedText }}",\n
-          "viewCount": "{{ viewCount }}",\n
-          "author": "{{ author }}",\n
-          "authorId": "{{ authorId }}",\n
-          "authorUrl": "/channel/{{ authorId }}",\n
-          "authorThumbnails": [\n
-            {\n
-              "url": "{{ authorThumbnails }}"\n
-            }\n
-          ],\n
-          "adaptiveFormats": [\n
-            {\n
-              "url": "{{ adaptiveFormatsUrl }}"\n
-            }\n
-          ],\n
-          "formatStreams": [\n
-            {\n
-              "url": "{{ formatStreamsUrl }}"\n
-            }\n
-          ],\n
-          "recommendedVideos": [\n
-            {% for video in recommendedVideos %}
-            {\n
-              "videoId": "{{ video.videoId }}",\n
-              "title": "{{ video.title }}",\n
-              "videoThumbnails": [\n
-                {\n
-                  "url": "https://img.youtube.com/vi/{{ video.videoId }}/0.jpg"\n
-                }\n
-              ],\n
-              "author": "{{ video.author }}",\n
-              "authorUrl": "/channel/{{ video.authorId }}",\n
-              "authorId": "{{ video.authorId }}",\n
-              "viewCountText": "{{ video.viewCountText }}",\n
-              "viewCount": "{{ video.viewCount }}"\n
-            },\n
-            {% else %}
-            {"error": "利用可能な推奨ビデオはありません。"}\n
-            {% endfor %}
-          ]\n
-        }\n
-        """
-
-        # テンプレートをレンダリングして返す
-        return render_template_string(html_template, **api_data)
-
-    except Exception as e:
-        # 詳細なエラーメッセージとスタックトレースをログに出力
-        print(f"エラーが発生しました: {e}")
-        print("Stack trace:", traceback.format_exc())
-        return "内部サーバーエラー https://inv.nadeko.net/ がAPIとして機能することを確認し、もう一度読み込み直してください。shortは見れないものが多いです。", 500
-
-
-from flask import Flask, request, jsonify
-import subprocess
-import json
-import traceback
-
-app = Flask(__name__)
-
-@app.route('/api', methods=['GET', 'POST'])
-def watch_apiq():
-    try:
-        apiqid = request.args.get('q') if request.method == 'GET' else request.json.get('q')
-        if not apiqid:
-            return jsonify({"error": "No video ID provided"}), 400
-
-        # curlコマンドを実行してAPIデータを取得
-        curl_command = [
-            "curl", "-s", f"https://thingproxy.freeboard.io/fetch/https://inv.nadeko.net/api/v1/search?q={apiqid}"
-        ]
-        response = subprocess.run(curl_command, capture_output=True, text=True)
-
-        if response.returncode != 0:
-            print(f"Error executing curl: {response.stderr}")
-            return jsonify({"error": "Failed to fetch search results"}), 500
-
-        # レスポンスがJSON形式だと仮定して、データを取得
-        data = json.loads(response.stdout)
-
-        # データ形式がリストの場合に対応
-        if isinstance(data, list):
-            apiq_results = [
-                {
-                    "title": item.get("title", "No title"),
-                    "videoId": item.get("videoId", "No videoId"),
-                    "author": item.get("author", "No author"),
-                    "authorId": item.get("authorId", "No authorId"),
-                    "videoThumbnail": item.get("videoThumbnails", [{}])[0].get("url", "No thumbnail URL"),
-                    "viewCountText": item.get("viewCountText", "No view count text"),
-                    "publishedText": item.get("publishedText", "No published text"),
-                    "lengthSeconds": item.get("lengthSeconds", "No length")
-                }
-                for item in data
-            ]
-        else:
-            apiq_results = []
-
-        # JSONレスポンスを返す
-        return jsonify({"results": apiq_results}), 200
-
-    except Exception as e:
-        # 詳細なエラーメッセージとスタックトレースをログに出力
-        print(f"エラーが発生しました: {e}")
-        print("Stack trace:", traceback.format_exc())
-        return jsonify({
-            "error": "内部サーバーエラー",
-            "message": "https://inv.nadeko.net/ がAPIとして機能することを確認し、もう一度読み込み直してください。shortは見れないものが多いです。"
-        }), 500
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    return jsonify(api_data)
 
 
 @app.route('/home')
 def watch_jp():
-    try:
-        la_id = request.args.get('la')
-        if not la_id:
-            return "No channel ID provided", 400
+    la_id = request.args.get('la')
+    if not la_id:
+        return "No channel ID provided", 400
 
-        # `curl`コマンドを使ってAPIデータを取得
-        curl_command = [
-            "curl", "-s", "https://thingproxy.freeboard.io/fetch/https://inv.nadeko.net/api/v1/trending?region={la_id}"
-        ]
-        response = subprocess.run(curl_command, capture_output=True, text=True)
+    # トレンドデータを取得
+    url = f"https://thingproxy.freeboard.io/fetch/https://inv.nadeko.net/api/v1/trending?region={la_id}"
+    data = fetch_data_from_api(url)
 
-        if response.returncode != 0:
-            print(f"Error executing curl: {response.stderr}")
-            return "Failed to fetch trending videos", 500
+    if not data:
+        return "Failed to fetch trending data", 500
 
-        # レスポンスがJSON形式だと仮定して、データを取得
-        data = json.loads(response.stdout)
+    trending_videos = [
+        {
+            "title": item.get("title", "No title"),
+            "videoId": item.get("videoId", "No videoId"),
+            "author": item.get("author", "No author"),
+            "authorId": item.get("authorId", "No authorId"),
+            "videoThumbnail": item.get("videoThumbnails", [{}])[0].get("url", "No thumbnail URL"),
+            "viewCountText": item.get("viewCountText", "No view count text"),
+            "publishedText": item.get("publishedText", "No published text"),
+            "lengthSeconds": item.get("lengthSeconds", "No length")
+        }
+        for item in data.get("items", [])
+    ]
 
-        # 必要なデータを整形して取得
-        trending_videos = [
-            {
-                "title": item.get("title", "No title"),
-                "videoId": item.get("videoId", "No videoId"),
-                "author": item.get("author", "No author"),
-                "authorId": item.get("authorId", "No authorId"),
-                "videoThumbnail": item.get("videoThumbnails", [{}])[0].get("url", "No thumbnail URL"),
-                "viewCountText": item.get("viewCountText", "No view count text"),
-                "publishedText": item.get("publishedText", "No published text"),
-                "lengthSeconds": item.get("lengthSeconds", "No length")
-            }
-            for item in data.get("items", [])
-        ]
+    html_template = """
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>トレンドビデオ</title>
+    </head>
+    <body>
+        <h3>Trending Videos:</h3>
+        <ul>
+        {% for video in trending_videos %}
+            <li>
+                <a href="/watch?v={{ video.videoId }}">
+                    <img src="{{ video.videoThumbnail }}" alt="{{ video.title }}">
+                    <h3>{{ video.title }}</h3>
+                </a>
+                <p>Author: <a href="/channel?c={{ video.authorId }}">{{ video.author }}</a></p>
+                <p>View Count: {{ video.viewCountText }}</p>
+                <p>Published: {{ video.publishedText }}</p>
+                <p>Length: {{ video.lengthSeconds }} seconds</p>
+            </li>
+        {% else %}
+            <li>No trending videos available.</li>
+        {% endfor %}
+        </ul>
+    </body>
+    </html>
+    """
 
-        # 動的なHTMLテンプレート
-        html_template = """
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>トレンドビデオ</title>
-        </head>
-        <body>
-            <ul>
-            {% for result in trending_videos %}
-                <li>
-                    <a href="/watch?v={{ result.videoId }}">
-                        <img src="{{ result.videoThumbnail }}" alt="{{ result.title }}">
-                        <h3>{{ result.title }}</h3>
-                    </a>
-                    <p><strong>Author:</strong> <a href="/channel?c={{ result.authorId }}">{{ result.author }}</a></p>
-                    <p><strong>View Count:</strong> {{ result.viewCountText }}</p>
-                    <p><strong>Published:</strong> {{ result.publishedText }}</p>
-                    <p><strong>Length:</strong> {{ result.lengthSeconds }} seconds</p>
-                </li>
-                {% else %}
-                <li>取得できませんでした。error message:%7Bnot%7D   </li>
-            {% endfor %}
-            </ul>
-        </body>
-        </html>
-        """
-
-        # テンプレートをレンダリングして返す
-        return render_template_string(html_template, trending_videos=trending_videos)
-
-    except Exception as e:
-        print(f"An error occurred: {e}")
-        return "内部サーバーエラー https://inv.nadeko.net/ がAPIとして機能することを確認し、もう一度読み込み直してください。短い動画(１分以内)は見れないものが多いです。", 500
-
-
-
-
+    return render_template_string(html_template, trending_videos=trending_videos)
 
 @app.route('/channel')
 def channel_page():
