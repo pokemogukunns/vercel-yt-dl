@@ -37,6 +37,7 @@ def watch_video():
         "title": data.get("title", "No title"),
         "videoId": data.get("videoId", "No videoId"),
         "description": data.get("description", "No description"),
+        "authorId": data.get("authorId", "No author"),
         "author": data.get("author", "No author"),
         "authorThumbnails": data.get("authorThumbnails", [{}])[0].get("url", "No authorThumbnails URL"),
         "adaptiveFormatsUrl": data.get("adaptiveFormats", [{}])[0].get("url", "No adaptiveFormats URL"),
@@ -71,10 +72,11 @@ def watch_video():
         <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     </head>
     <body>
-        <h1>{{ title }}</h1>
+        
         <video width="100%" controls poster="https://img.youtube.com/vi/{{ videoId }}/0.jpg">
             <source src="{{ formatStreamsUrl }}">
         </video>
+        <h1>{{ title }}</h1>
         <p><strong>Video ID:</strong> {{ videoId }}</p>
         <p><strong>Description:</strong> {{ description }}</p>
         <p><strong>View Count:</strong> {{ viewCount }} views</p>
