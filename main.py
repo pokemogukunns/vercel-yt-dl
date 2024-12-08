@@ -72,7 +72,11 @@ def watch_video():
         <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     </head>
     <body>
-        
+        <form class="pure-form" action="./search" method="get">
+                    <fieldset>
+                        <input type="search" id="searchbox" autocomplete="on" autocorrect="on" autocapitalize="none" spellcheck="false" autofocus="" name="q" placeholder="検索" title="検索" value="">
+                    </fieldset>
+                </form>
         <video width="100%" controls poster="https://img.youtube.com/vi/{{ videoId }}/0.jpg">
             <source src="{{ formatStreamsUrl }}">
         </video>
