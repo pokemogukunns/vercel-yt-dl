@@ -8,7 +8,7 @@ app = Flask(__name__)
 # 共通のcurlコマンド実行関数
 def fetch_data_from_api(url):
     try:
-        curl_command = ["curl", "-s", url]
+        curl_command = ["curl", "-s", "--compressed", url]
         response = subprocess.run(curl_command, capture_output=True, text=True)
         if response.returncode != 0:
             print(f"Error executing curl: {response.stderr}")
