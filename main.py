@@ -102,10 +102,10 @@ def watch_video():
         </ul>
         <div id="log">
         <iframe width="300" height="200" src="./api?v={{ videoId }}"></iframe><br>
-<iframe width="300" height="200" src="https://tech-unlimited.com/urlencode.html"></iframe><br>
-<iframe width="300" height="200" src="https://tech-unlimited.com/escape.html"></iframe><br>
-<iframe width="300" height="200" src="https://tech-unlimited.com/escape-unicode.html"></iframe><br>
-<iframe width="300" height="200" src="https://tech-unlimited.com/numeric-char-ref.html"></iframe><br>
+<iframe width="500" height="600" src="https://tech-unlimited.com/urlencode.html"></iframe><br>
+<iframe width="500" height="600" src="https://tech-unlimited.com/escape.html"></iframe><br>
+<iframe width="500" height="600" src="https://tech-unlimited.com/escape-unicode.html"></iframe><br>
+<iframe width="500" height="600" src="https://tech-unlimited.com/numeric-char-ref.html"></iframe><br>
 
     </body>
     </html>
