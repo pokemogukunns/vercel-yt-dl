@@ -81,7 +81,8 @@ def watch_video():
             <source src="{{ formatStreamsUrl }}">
         </video>
         <h1>{{ title }}</h1>
-        <p><strong>Video ID:</strong> {{ videoId }}</p>
+        <p><strong>Video ID:</strong><a href="./watch?v={{ videoId }}">{{ videoId }}</a></p>
+        <a href="./watch?v={{ videoId }}#log">ログ</a>
         <p><strong>Description:</strong> {{ description }}</p>
         <p><strong>View Count:</strong> {{ viewCount }} views</p>
         <p><strong>Quality:</strong> {{ quality }}</p>
@@ -99,6 +100,9 @@ def watch_video():
             <li>No recommended videos available.</li>
         {% endfor %}
         </ul>
+        <div id="log">
+        <iframe width="300" height="200" src="./api?v={{ videoId }}">
+</iframe>
     </body>
     </html>
     """
