@@ -19,6 +19,28 @@ def fetch_data_from_api(url):
         return None
 
 
+def decode_unicode_escaped_json(data):
+    """
+    UnicodeエスケープされたJSON文字列をデコードして戻す関数。
+
+    Args:
+        data (str or dict): JSON文字列または辞書形式のデータ
+
+    Returns:
+        dict: デコードされたJSON辞書
+    """
+    if isinstance(data, str):
+        # JSON文字列の場合、まずパースして辞書に変換
+        try:
+            data = json.loads(data)
+        except json.JSONDecodeError as e:
+            print(f"JSONデコードエラー: {e}")
+            return None
+    # 再エンコードしてデコード
+    return json.loads(json.dumps(data, ensure_ascii=False))
+
+
+
 @app.route('/watch')
 def watch_video():
     videoid = request.args.get('v')
