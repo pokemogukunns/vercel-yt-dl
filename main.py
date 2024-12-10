@@ -26,7 +26,7 @@ def watch_video():
         return "No video ID provided", 400
 
     # データを取得
-    url = f"https://thingproxy.freeboard.io/fetch/https://inv.nadeko.net/api/v1/videos/{videoid}"
+    url = f"https://inv.nadeko.net/api/v1/videos/{videoid}"
     data = fetch_data_from_api(url)
 
     if not data:
@@ -121,7 +121,7 @@ def watch_api():
         return jsonify({"error": "No video ID provided"}), 400
 
     # データを取得
-    url = f"https://thingproxy.freeboard.io/fetch/https://inv.nadeko.net/api/v1/videos/{apiid}"
+    url = f"https://inv.nadeko.net/api/v1/videos/{apiid}"
     data = fetch_data_from_api(url)
 
     if not data:
@@ -157,7 +157,7 @@ def watch_jp():
         return "No channel ID provided", 400
 
     # トレンドデータを取得
-    url = f"https://thingproxy.freeboard.io/fetch/https://inv.nadeko.net/api/v1/trending?region={la_id}"
+    url = f"https://inv.nadeko.net/api/v1/trending?region={la_id}"
     data = fetch_data_from_api(url)
 
     if not data:
@@ -219,7 +219,7 @@ def channel_page():
 
         # curlコマンドを実行してチャンネルデータを取得
         curl_command = [
-            "curl", "-s", f"https://thingproxy.freeboard.io/fetch/https://inv.nadeko.net/api/v1/channels/{channel_id}"
+            "curl", "-s", f"https://inv.nadeko.net/api/v1/channels/{channel_id}"
         ]
         response = subprocess.run(curl_command, capture_output=True, text=True)
 
@@ -316,7 +316,7 @@ def search_videos():
 
         # curlコマンドを実行してAPIデータを取得
         curl_command = [
-            "curl", "-s", f"https://thingproxy.freeboard.io/fetch/https://inv.nadeko.net/api/v1/search?q={query}"
+            "curl", "-s", f"https://inv.nadeko.net/api/v1/search?q={query}"
         ]
         response = subprocess.run(curl_command, capture_output=True, text=True)
 
