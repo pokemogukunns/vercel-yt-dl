@@ -260,7 +260,7 @@ def channel_page():
         channel_data = {
             "author": data.get("author", "No author"),
             "authorId": data.get("authorId", "No authorId"),
-            "authorBannerUrl": data.get("authorBanners", [{}])[0].get("url", "No banner URL") if data.get("authorBanners") else "No banner URL",
+            "authorBannerUrl": data.get("authorBanners", [{}])[0].get("url", "https://pokemogukunns.github.io/no-channel-img.png") if data.get("authorBanners") else "https://pokemogukunns.github.io/no-channel-img.png",
             "description": data.get("description", "No description"),
             "tags": data.get("tags", []),
             "latestVideos": [
