@@ -117,7 +117,7 @@ def watch_video():
         <ul>
         {% for video in recommendedVideos %}
             <li><a href="/watch?v={{ video.videoId }}">
-            <img src="https://www.img.youtube.com/{{ video.videoId }}/0.jpg">{{ video.title }}</a> <br> {{ video.author }} ({{ video.viewCountText }})</li>
+            <img src="https://img.youtube.com/vi/{{ video.videoId }}/0.jpg">{{ video.title }}</a> <br> {{ video.author }} ({{ video.viewCountText }})</li>
         {% else %}
             <li>No recommended videos available.</li>
         {% endfor %}
