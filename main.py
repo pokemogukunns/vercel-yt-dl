@@ -2,8 +2,11 @@ import subprocess
 import json
 import traceback
 from flask import Flask, render_template_string, request, jsonify
+from flask_cors import CORS
 
 app = Flask(__name__)
+
+CORS(app)
 
 # 共通のcurlコマンド実行関数
 def fetch_data_from_api(url):
